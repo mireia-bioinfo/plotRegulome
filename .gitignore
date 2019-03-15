@@ -1,0 +1,5 @@
+*.Rproj.user
+*.Rhistory
+*.pdf
+data-raw
+.Rproj.user

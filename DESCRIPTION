@@ -1,0 +1,19 @@
+Package: plotRegulome
+Title: Plot Regulome
+Version: 0.0.0.9000
+Authors@R: person("Mireia", "Ramos-Rodriguez", email = "mramos@igtp.cat", role = c("aut", "cre"))
+Description: This package allows you to plot different types of genomic data (SNPs, TFBS, chromatin classes) in a single plot.
+Depends: R (>= 3.4.2)
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Imports: GenomicRanges,
+    regioneR,
+    scales,
+    ggrepel,
+    dplyr,
+    cowplot,
+    ggplot2,
+    ggbio,
+    rtracklayer
