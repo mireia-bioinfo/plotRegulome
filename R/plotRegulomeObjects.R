@@ -109,7 +109,7 @@ plot.contactsRegulome <- function(contactsObject) {
       #                       contactsObject$name),
       #          angle=90, vjust=-3.5, size=6),
       ## Y axis label
-      ggplot2::ylab(paste0("Virtual 4C\n", contactsObject$name)),
+      ggplot2::ylab("Virtual 4C"),
       ## Limits for plot
       ggplot2::xlim(start(ranges(contactsObject$coordinates)),
            end(ranges(contactsObject$coordinates))))
