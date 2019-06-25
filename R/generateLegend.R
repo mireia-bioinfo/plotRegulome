@@ -63,20 +63,6 @@ generateLegendGG <- function(contactsObject,
   legends <- legends[idx]
 
   if (length(legends)>0) {
-    # tmp <- ggplot2::ggplot() +
-    #   legends +
-    #   ggplot2::guides(fill=ggplot2::guide_legend(ncol=1,order=2),
-    #                   color=ggplot2::guide_legend(ncol=1,order=1),
-    #                   size=ggplot2::guide_legend(ncol=1,order=3)) +
-    #   ggplot2::theme(legend.margin=ggplot2::margin(10,10,10,10,unit="pt"),
-    #                  legend.text=ggplot2::element_text(size=12),
-    #                  legend.title=ggplot2::element_text(size=14, face="bold"),
-    #                  legend.key	= ggplot2::element_rect(fill=NA),
-    #                  legend.key.size=ggplot2::unit(12,"pt"),
-    #                  legend.box="vertical")
-    #
-    # legend <- cowplot::get_legend(tmp)
-    # plot_grid(legend)
     theme_legend <- ggplot2::theme(legend.margin=ggplot2::margin(10,10,10,10,unit="pt"),
                                    legend.text=ggplot2::element_text(size=12),
                                    legend.title=ggplot2::element_text(size=14, face="bold"),
