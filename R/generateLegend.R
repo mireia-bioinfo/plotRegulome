@@ -47,10 +47,12 @@ generateLegendGG <- function(contactsObject,
                                                       name="Virtual 4C"))
 
   otherLegend <- list(ggplot2::geom_line(data=df3,
-                                         ggplot2::aes(x, y, size=class),
-                                         color=df3$color),
+                                         ggplot2::aes(x, y, size=class,
+                                                      color=class)),
                       ggplot2::scale_size_manual(values=c(2,1),
-                                                   name="Other"))
+                                                   name="Other"),
+                      ggplot2::scale_color_manual(values=as.character(df3$color),
+                                                  name="Other"))
 
   legends <- list(contactLegend,
                   mapLegend,

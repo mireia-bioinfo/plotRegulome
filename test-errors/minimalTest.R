@@ -3,7 +3,7 @@ devtools::load_all(".")
 
 coordinates <- GRanges("chr13:28444157-28550368")
 snps.type <- ""
-contacts.type <- 183446
+contacts.type <- ""#183446
 maps.type <- "chromatinClassesReduced"
 cluster.type <- "enhancerClusters"
 tfs.type <- "adult"
@@ -17,6 +17,7 @@ files.contacts <- paste0(path,
                          "/",
                          "PI_Merged_Digest_Human_HindIII_BaitID", contacts.type, "_bg", c(0,3,5), "_score.bw")
 
+files.contacts <- ""
 
 ## General plot --------------------------
 plotRegulome(coordinates=coordinates,
