@@ -77,7 +77,8 @@ generateLegendGG <- function(contactsObject,
     legend <- cowplot::plot_grid(leg.cont,
                                  leg.map,
                                  leg.other,
-                                 ncol=1)
+                                 ncol=1,
+                                 align="v")
   } else {
     t <- emptyPlot(mapsObject$coordinates, 1)
     legend <- ggplot2::ggplot() + t + ggplot2::theme_void()
