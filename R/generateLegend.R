@@ -69,14 +69,11 @@ generateLegendGG <- function(contactsObject,
                                    legend.key	= ggplot2::element_rect(fill=NA),
                                    legend.key.size=ggplot2::unit(12,"pt"),
                                    legend.box="vertical")
+    leg.all <- lapply(legends,
+                      function(x) cowplot::get_legend(ggplot2::ggplot() + x + theme_legend))
 
-    leg.cont <- cowplot::get_legend(ggplot2::ggplot() + contactLegend + theme_legend)
-    leg.map <- cowplot::get_legend(ggplot2::ggplot() + mapLegend + theme_legend)
-    leg.other <- cowplot::get_legend(ggplot2::ggplot() + otherLegend + theme_legend)
 
-    legend <- cowplot::plot_grid(leg.cont,
-                                 leg.map,
-                                 leg.other,
+    legend <- cowplot::plot_grid(plotlist=leg.all,
                                  ncol=1,
                                  align="v")
   } else {
