@@ -1,4 +1,5 @@
 ## Minimal example for testing
+devtools::load_all(".")
 
 coordinates <- GRanges("chr13:28444157-28550368")
 snps.type <- ""
