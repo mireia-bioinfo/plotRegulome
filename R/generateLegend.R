@@ -1,12 +1,21 @@
 generateLegendGG <- function(contactsObject,
                              mapsObject,
                              clustersObject,
-                             tfsObject) {
-  ## Maps Object
-  df2 <- data.frame("x"=rep(1, length(mapsObject$col)),
-                    "y"=rep(1, length(mapsObject$col)),
-                    "class"=names(mapsObject$col))
+                             tfsObject,
+                             snpsObject) {
 
+  ## Automatic legends ------------------
+  leg.list <- list(snps=snpsObject,
+                   maps=mapsObject)
+  leg.plot <- list()
+  for (i in 1:length(leg.list)) {
+    if (leg.list[[i]]$name!="") {
+      leg <- ggplot2::ggplot() + plot(leg.list[[i]])
+      leg.plot[[names(leg.list[i])]] <- leg
+    }
+  }
+
+  ## Manual legends ----------------------
   ## Contacts Object
   if (contactsObject$name!="") {
     df1 <- data.frame("x"=rep(1, length(contactsObject$col)+1),
@@ -19,7 +28,6 @@ generateLegendGG <- function(contactsObject,
     df1 <- data.frame()
   }
 
-
   ## Other Object
   if (tfsObject$name!="") tfs.name="TF binding" else tfs.name=""
 
@@ -31,13 +39,7 @@ generateLegendGG <- function(contactsObject,
                               tfsObject$col))
   df3 <- df3[df3$class!="",]
 
-  ## Create legends
-  mapLegend <- list(ggplot2::geom_bar(data=df2,
-                                      ggplot2::aes(x, y, fill=class),
-                                      stat="identity"),
-                    ggplot2::scale_fill_manual(values=mapsObject$col,
-                                                 name=gsub("/", "\n", mapsObject$name)))
-
+  ## Manually create legends
   contactLegend <- list(ggplot2::geom_point(data=df1,
                                             ggplot2::aes(x,y, color=class, shape=class),
                                             size=4, fill="black"),
@@ -54,25 +56,31 @@ generateLegendGG <- function(contactsObject,
                       ggplot2::scale_color_manual(values=as.character(df3$color),
                                                   name="Other"))
 
-  legends <- list(contactLegend,
-                  mapLegend,
-                  otherLegend)
-
-  dfs <- list(df1, df2, df3)
+  legends <- list(ggplot2::ggplot() + contactLegend,
+                  ggplot2::ggplot() + otherLegend)
+  dfs <- list(df1, df3)
   idx <- sapply(dfs, nrow)
   idx <- idx>0
-
   legends <- legends[idx]
 
-  if (length(legends)>0) {
+  ## Add to other legends
+  if (length(legends)==2) {
+    leg.plot <- c(legends[1],
+                  leg.plot,
+                  legends[2])
+  } else {
+    leg.plot <- c(leg.plot, legends)
+  }
+
+  if (length(leg.plot)>0) {
     theme_legend <- ggplot2::theme(legend.margin=ggplot2::margin(10,10,10,10,unit="pt"),
                                    legend.text=ggplot2::element_text(size=12),
                                    legend.title=ggplot2::element_text(size=14, face="bold"),
                                    legend.key	= ggplot2::element_rect(fill=NA),
                                    legend.key.size=ggplot2::unit(12,"pt"),
                                    legend.box="vertical")
-    leg.all <- lapply(legends,
-                      function(x) cowplot::get_legend(ggplot2::ggplot() + x + theme_legend))
+    leg.all <- lapply(leg.plot,
+                      function(x) cowplot::get_legend(x + theme_legend))
 
 
     legend <- cowplot::plot_grid(plotlist=leg.all,

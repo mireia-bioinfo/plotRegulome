@@ -8,15 +8,17 @@
 #' @param col Color for the GWAS SNPs. Default: "dark red"
 #' @param genome Character string indicating the genome for the coordinates. Default: hg19.
 #' @param top Number of most significant SNPs for showing ID. Default: 3.
-#' @param maxContacts Maximum score for contacts in contactsRegulome object. If no contacts present, should be NULL.
+#' @param scaling Value for scaling the -log10(PVAL) to, when plotted together with another track. Will add a secondary y axis.
+#' If no scaling should be applied, leave blank (NULL).
+#' @param path Path where the datasets are saved.
 #' @export
 #' @import GenomicRanges
 create_snpsRegulome <- function(coordinates,
                                 snps.type,
                                 col="dark red",
-                                genome,
+                                genome="hg19",
                                 top=3,
-                                maxContacts=NULL,
+                                scaling=NULL,
                                 path="~/data/IsletRegulome/Rdata/") {
   ## Load SNPs data
   if (snps.type!="") {
@@ -24,12 +26,15 @@ create_snpsRegulome <- function(coordinates,
                     genome, "/", genome, "_snps_", snps.type, "_",
                     as.character(seqnames(coordinates)), ".rda"))
   } else {
-    snps <- GRanges()
+    snps <- GRanges() # create empty GRanges if no SNPs to plot
   }
 
   ## Create snpsRegulome object
   snps.sel <- subsetByOverlaps(snps, coordinates)
-  if (length(snps.sel)!=0) max <- max(-log10(snps.sel$PVAL)) else max <- NULL
+
+  ## Return paramters needed for scaling
+  if (length(snps.sel)>0) max <- max(-log10(snps.sel$PVAL)) else max <- NULL
+  if (is.null(scaling)) scaleTo <- max else scaleTo <- scaling # scale to max pval if no scaling
 
   snps <- list("name"=snps.type,
                "col"=col,
@@ -37,8 +42,7 @@ create_snpsRegulome <- function(coordinates,
                "coordinates"=coordinates,
                "value"=snps.sel,
                "moreArgs"=list("top"=top,
-                               "maxContact"=maxContacts,
-                               "maxLogPVAL"=max))
+                               "scaleTo"=scaleTo))
   snps <- structure(snps, class="snpsRegulome")
 
   return(snps)
@@ -49,25 +53,26 @@ create_snpsRegulome <- function(coordinates,
 #' This function uses virtual 4C data (3 bigWig files, scores 0, 3 and 5) to generate an object containing
 #' the data present in \code{coordinates} and all the elements needed for its plotting method.
 #' @param coordinates GRanges object with coordinates you want to plot.
-#' @param contacts.type Character vector including the coordinates for the bw files.
+#' @param contacts.type Character vector including the path for the bw files.
 #' @param col Colors for plotting virtual 4C data. Defaults to c("grey", "blue", "dark orange").
 #' @param genome Character string indicating the genome for the coordinates. Default: hg19.
 #' @param smooth Arbitrary number for smoothing contact signal. Default: 5.
+#' @param path Path where the datasets are saved.
 #' @export
 #' @import GenomicRanges
 create_contactsRegulome <- function(coordinates,
                                     contacts.type,
                                     col=c("0"="grey", "3"="blue", "5"="dark orange"),
-                                    genome,
+                                    genome="hg19",
                                     smooth=5,
                                     path="~/data/IsletRegulome/Rdata/") {
   ## Load coverage data
-  if (contacts.type != "") {
+  if (any(contacts.type != "")) {
     cov <- lapply(contacts.type,
                   rtracklayer::import,
                   which=coordinates)
     cov <- GRangesList(cov)
-    names(cov) <- c("0", "3", "5")
+    names(cov) <- c("0", "3", "5") # Different ChICAGO scores
   } else {
     cov <- GenomicRanges::GRanges()
     col <- NULL
@@ -82,7 +87,8 @@ create_contactsRegulome <- function(coordinates,
                        coordinates=coordinates)
   cov.smooth <- GRangesList(cov.smooth)
 
-  max <- max(unlist(lapply(cov.smooth, function(x) max(mcols(x)[,1]))))
+  ## Get maximum value
+  if (length(cov)>1) max <- max(unlist(lapply(cov.smooth, function(x) max(mcols(x)[,1])))) else max <- 0
   if(is.infinite(max) | max==0) max <- NULL
 
   ## Control for ranges with score 0
@@ -119,11 +125,12 @@ create_contactsRegulome <- function(coordinates,
 #' @param coordinates GRanges object with coordinates you want to plot.
 #' @param maps.type Name of the chromatin maps to plot. The value can be: chromatinClasses, chromatinClassesReduced, chromatinStates, openChromatinClasses, progenitors or "" (default, no map).
 #' @param genome Character string indicating the genome for the coordinates. Default: hg19.
+#' @param path Path where the datasets are saved.
 #' @export
 #' @import GenomicRanges
 create_mapsRegulome <- function(coordinates,
                                 maps.type,
-                                genome,
+                                genome="hg19",
                                 path="~/data/IsletRegulome/Rdata/") {
   ## Load Maps data
   if(maps.type!="") {
@@ -155,12 +162,13 @@ create_mapsRegulome <- function(coordinates,
 #' @param cluster.type Name of the cluster to plot. The value can be: enhancerClusters, enhancerHubs, stretchEnhancers, superEnhancers or "" (no clusters).
 #' @param col Color for plotting clusters. Default: "dark green".
 #' @param genome Character string indicating the genome for the coordinates. Default: hg19.
+#' @param path Path where the datasets are saved.
 #' @export
 #' @import GenomicRanges
 create_clustersRegulome <- function(coordinates,
                                     cluster.type,
                                     col="dark green",
-                                    genome,
+                                    genome="hg19",
                                     path="~/data/IsletRegulome/Rdata/") {
   ## Load Cluster data
   if(cluster.type!="") {
@@ -186,7 +194,7 @@ create_clustersRegulome <- function(coordinates,
                "genome"=genome,
                "coordinates"=coordinates,
                "value"=clusters.sel,
-               "moreArgs"=list("lwd"=c("CDS"=2,
+               "moreArgs"=list("lwd"=c("CDS"=2, # Info for enhancer hubs
                                        "intron"=1,
                                        "exon"=3)))
   clusters <- structure(clusters, class="clustersRegulome")
@@ -203,12 +211,13 @@ create_clustersRegulome <- function(coordinates,
 #' @param col Color for the tfs circles border.
 #' @param position Position of the center of TFs circle, should be between c(0,1).
 #' @param genome Character string indicating the genome for the coordinates. Default: hg19.
+#' @param path Path where the datasets are saved.
 #' @export
 create_tfsRegulome <- function(coordinates,
                                tfs.type,
                                col="dark blue",
                                position.y=0.5, # from 0 to 1
-                               genome,
+                               genome="hg19",
                                path="~/data/IsletRegulome/Rdata/") {
   ## Load TFs data
   if (tfs.type!="") {
@@ -239,6 +248,7 @@ create_tfsRegulome <- function(coordinates,
 #' @param col Color for the genes.
 #' @param showLongestTranscript When plotting gene data, set to TRUE (default) if you want to reduce the number of transcripts by only plotting the longest transcript per gene. If set to FALSE, will plot all the transcripts.
 #' @param genome Character string indicating the genome for the coordinates. Default: hg19.
+#' @param path Path where the datasets are saved.
 #' @export
 #' @import GenomicRanges
 create_genesRegulome <- function(coordinates,
@@ -246,14 +256,13 @@ create_genesRegulome <- function(coordinates,
                                        "spec"="darkorchid3",
                                        "lnc"="black"),
                                  showLongestTranscript=TRUE,
-                                 genome,
+                                 genome="hg19",
                                  path="~/tools/isletregulomebrowser_shiny/static_data/RData/",
                                  specPath=paste0(path, "shared/specific_genes.rda")) {
   ## Load gene and non-coding data
   load(paste0(path,
               genome, "/", genome, "_gene_annotation_allNotReduced_ensemblv75_",
               as.character(seqnames(coordinates)), ".rda"))
-  # load("../isletregulomebrowser_shiny/data/hg19/hg19_gene_annotation_codingNotReduced_ensemblv75_chr20.rda")
   load(paste0(path,
                   genome, "/", genome, "_lncRNA.rda"))
   lncRNA$tx_id <- lncRNA$id

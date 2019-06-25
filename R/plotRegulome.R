@@ -49,7 +49,7 @@ plotRegulome <- function(coordinates,
 
   snpsObject <- create_snpsRegulome(coordinates=coordinates,
                                     snps.type=snps.type,
-                                    maxContacts=contactsObject$moreArgs$maxContact,
+                                    scaling=contactsObject$moreArgs$maxContact,
                                     genome=genome,
                                     path=path)
 
@@ -75,36 +75,52 @@ plotRegulome <- function(coordinates,
                                       genome="hg19",
                                       path=path)
 
-  #### Full plot
-  scale <- snpsObject$moreArgs$maxLogPVAL/contactsObject$moreArgs$maxContact
-  if(length(scale)==0) scale <- 1 else if(is.infinite(scale)) scale <- 1
+  #### Full plot ---------------------------
+  ## SNPs & contacts -----------------------
+  p1 <-
+      ggplot2::ggplot() +
+        plot(snpsObject) +
+        plot(contactsObject)
 
-  if(length(snpsObject$value)!=0) snpsName <- snpsObject$name else snpsName <- ""
 
-  p1 <- ggplot2::ggplot() + plot(snpsObject) + plot(contactsObject) + themes$panel1 +
-    ggplot2::scale_y_continuous(sec.axis = ggplot2::sec_axis(~.*scale,
-                                           name=snpsName)) +
-    ggplot2::xlim(start(ranges(coordinates)), end(ranges(coordinates)))
+  if (length(snpsObject$value)>0 &
+      length(contactsObject$value)>0) {
+    scale <- max(-log10(snpsObject$value$PVAL), na.rm=T)/contactsObject$moreArgs$maxContact
+    p1 <- p1 + ggplot2::scale_y_continuous(sec.axis = ggplot2::sec_axis(~.*scale,
+                                                                        name=snpsObject$name))
+  }
 
-  p2 <- ggplot2::ggplot() + plot(mapsObject) +
-    ggplot2::geom_rect(ggplot2::aes(xmin=start(ranges(coordinates)),
-                  xmax=end(ranges(coordinates)),
-                  ymin=0.85, ymax=1), color="black", fill=NA) +
-    plot(clustersObject) +
-    plot(tfsObject) +
-    themes$panel2 +
-    ggplot2::ylim(0.25,1.1) +
-    ggplot2::xlim(start(ranges(coordinates)), end(ranges(coordinates)))
+  ## Maps & TFs -----------------------
+  p2 <-
+    ggplot2::ggplot() +
+      plot(mapsObject) +
+      ggplot2::geom_rect(ggplot2::aes(xmin=start(ranges(coordinates)),
+                    xmax=end(ranges(coordinates)),
+                    ymin=0.85, ymax=1), color="black", fill=NA) +
+      plot(clustersObject) +
+      plot(tfsObject) +
+      ggplot2::ylim(0.25,1.1)
 
-  p3 <- ggplot2::ggplot() + plot(genesObject) + themes$panel3 +
-    ggplot2::xlab("Genomic Position (bp)") +
-    ggplot2::xlim(start(ranges(coordinates)), end(ranges(coordinates)))
+  ## Genes -----------------------
+  p3 <-
+    ggplot2::ggplot() +
+    plot(genesObject)
 
-  main <- cowplot::plot_grid(p1, p2, p3,
-                    nrow=3, align="v", rel_heights = c(0.4,0.3,0.3))
+  ## Compose main plot --------------
+  main <- cowplot::plot_grid(p1 + themeXblank(legend.position="none"),
+                             p2 + themeXblank(legend.position="none"),
+                             p3,
+                             nrow=3, align="v", rel_heights = c(0.4,0.3,0.3))
 
-  legend <- generateLegendGG(contactsObject, mapsObject,
-                           clustersObject, tfsObject)
+  if (snpsObject$name=="" & contactsObject$name=="") {
+    main$layers <- main$layers[-1]
+  }
+
+  legend <- generateLegendGG(contactsObject,
+                             mapsObject,
+                             clustersObject,
+                             tfsObject,
+                             snpsObject)
 
   RegulomePlot <- cowplot::plot_grid(
                                 plotIdeogramRegulome(coordinates,

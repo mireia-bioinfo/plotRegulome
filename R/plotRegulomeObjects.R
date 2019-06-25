@@ -12,7 +12,8 @@ plot <- function(regulomeObject) {
 
 plot.snpsRegulome <- function(snpsObject) {
   if (length(snpsObject$value)!=0) {
-    ## Add ids for top snps
+
+    ## Add ids for top snps -----
     top <- snpsObject$moreArgs$top
     snpsObject$value <- snpsObject$value[order(-log10(snpsObject$value$PVAL),
                                                decreasing=TRUE),]
@@ -27,47 +28,41 @@ plot.snpsRegulome <- function(snpsObject) {
     ## Convert SNPs to data.frame
     df <- data.frame(snpsObject$value)
 
-    ## Rescale if coverage are present
-    if (!is.null(snpsObject$moreArgs$maxContact)) {
-      df$rescPVAL <- scales::rescale(-log10(df$PVAL),
-                                     c(0, snpsObject$moreArgs$maxContact))
-    } else {
-      df$rescPVAL <- -log10(df$PVAL)
-    }
-
     ## List with arguments to be used after ggplot()
-    snpsPlot <- list(# SNP points
+    snpsPlot <- list(
+      # SNP points -------------
       ggplot2::geom_point(data=df,
-                 ggplot2::aes(start, rescPVAL,
+                 ggplot2::aes(start, scales::rescale(-log10(PVAL),
+                                                     c(0, snpsObject$moreArgs$scaleTo)),
                      fill=-log10(PVAL),
                      color=-log10(PVAL),
                      alpha=-log10(PVAL)),
                  size=1, pch=21),
-      ## SNP labels
+      ## SNP labels -------------
       ggrepel::geom_text_repel(data=df,
-                               ggplot2::aes(start, rescPVAL,
+                               ggplot2::aes(start, scales::rescale(-log10(PVAL),
+                                                                   c(0, snpsObject$moreArgs$scaleTo)),
                                    label=id.show),
-                               size=3),
-      ## SNP scale
+                               size=4),
+      ## SNP scale --------------
       ggplot2::scale_fill_continuous(high = snpsObject$col,
                             low = "white",
-                            name="-log10\nPvalue",
+                            name="-log10 P-value",
                             limits=c(0, NA)),
       ggplot2::scale_color_continuous(high = snpsObject$col,
                              low = "white",
-                             name="-log10\nPvalue",
+                             name="-log10 P-value",
                              limits=c(0, NA)),
-      ## SNP legends
-      ggplot2::guides(fill=ggplot2::guide_colorbar(title.position="bottom",
-                                 barwidth=0.5,
-                                 barheight=2),
-             alpha=FALSE),
-      ## SNP y label
-      ggplot2::ylab(""),
-      ## Limits for plot
-      ggplot2::xlim(start(ranges(snpsObject$coordinates)),
-           end(ranges(snpsObject$coordinates)))
-    )
+      ## SNP legends -------------
+      ggplot2::guides(fill=ggplot2::guide_colorbar(direction = "horizontal",
+                                                  title.position="top",
+                                                  barwidth=8),
+                      alpha=FALSE),
+      ## X axis ------------------
+      scaleXCoordinates(chr=as.character(seqnames(snpsObject$coordinates)),
+                        limits=c(start(snpsObject$coordinates),
+                                 end(snpsObject$coordinates))))
+
   } else {
     ## Return empty plot when GRanges is empty
     snpsPlot <- emptyPlot(snpsObject$coordinates, 0)
@@ -88,37 +83,33 @@ plot.contactsRegulome <- function(contactsObject) {
       len[is.na(len)] <- 0
     }
 
-
+    ## Convert to data.frame
     contacts.smooth <- lapply(contactsObject$value,
                               as.data.frame)
     contacts.smooth <- do.call(rbind, contacts.smooth)
     contacts.smooth$color <- unlist(mapply(rep, contactsObject$col, each=len))
 
-    contactPlot <- list(## Plot rects (histogram-like) coverage
+    contactPlot <- list(
+      ## Plot rects (histogram-like) coverage -----------
       ggplot2::geom_rect(data=contacts.smooth,
                 ggplot2::aes(xmin=start, xmax=end,
                     ymin=0, ymax=meanScore),
                 fill=contacts.smooth$color),
-      ## Add triange for viewpoint (bottom)
+      ## Add triange for viewpoint (bottom) -------------
       ggplot2::annotate("point", x=contactsObject$moreArgs$viewpoint,
                y=-0, pch=25, color="black", fill="black",
                size=3),
-      ## Subtitle of axis y name
-      # annotate("text", x=-Inf, y=0,
-      #          label=paste0("Viewpoint: ",
-      #                       contactsObject$name),
-      #          angle=90, vjust=-3.5, size=6),
-      ## Y axis label
+      ## Y axis label -----------------------------------
       ggplot2::ylab("Virtual 4C"),
-      ## Limits for plot
-      ggplot2::xlim(start(ranges(contactsObject$coordinates)),
-           end(ranges(contactsObject$coordinates))))
+      ## X axis ------------------
+      scaleXCoordinates(chr=as.character(seqnames(contactsObject$coordinates)),
+                        limits=c(start(contactsObject$coordinates),
+                                 end(contactsObject$coordinates))))
   } else {
     ## If GRanges is empty, return an empty plot
     contactPlot <- emptyPlot(contactsObject$coordinates, 0)
   }
   return(contactPlot)
-  # ggplot() + contactPlot
 }
 
 plot.mapsRegulome <- function(mapsObject) {
@@ -134,20 +125,27 @@ plot.mapsRegulome <- function(mapsObject) {
     maps.df <- dplyr::left_join(maps.df, colors)
 
     ## Plot maps
-    mapsPlot <- list(## Plot chromatin maps
+    mapsPlot <- list(
+      ## Plot chromatin maps--------------------
       ggplot2::geom_rect(data=maps.df,
                 mapping=ggplot2::aes(xmin=start, xmax=end,
-                            ymin=0.85, ymax=1),
-                fill=maps.df$color),
-      ## Limits for plot
-      ggplot2::xlim(start(ranges(mapsObject$coordinates)),
-           end(ranges(mapsObject$coordinates))))
+                            ymin=0.85, ymax=1, fill=type)),
+      ## Add color legend -----------------------
+      ggplot2::scale_fill_manual(values=mapsObject$col,
+                                 name=gsub("/", "\n", mapsObject$name)),
+      ## X axis ------------------
+      scaleXCoordinates(chr=as.character(seqnames(mapsObject$coordinates)),
+                        limits=c(start(mapsObject$coordinates),
+                                 end(mapsObject$coordinates))),
+      ## Blank y axis ----------
+      themeYblank())
   } else {
-    mapsPlot <- emptyPlot(mapsObject$coordinates, 1)
+    mapsPlot <- list(emptyPlot(mapsObject$coordinates, 1),
+                     themeYblank())
   }
 
   return(mapsPlot)
-  # ggplot() + mapsPlot
+
 }
 
 plot.clustersRegulome <- function(clustersObject) {
@@ -156,13 +154,22 @@ plot.clustersRegulome <- function(clustersObject) {
     clusters.df <- data.frame(clustersObject$value)
 
     ## Plot clusters
-    clustersPlot <- list(ggplot2::geom_segment(data=clusters.df, ## Plot chromatin clusters
+    clustersPlot <- list(
+      ## Plot chromatin clusters --------------
+      ggplot2::geom_segment(data=clusters.df,
                                       ggplot2::aes(x=start, xend=end,
                                           y=1.05, yend=1.05, lwd=class),
                                       color=clustersObject$col),
-                         ggplot2::scale_size_manual(values=clustersObject$moreArgs$lwd))
+                         ggplot2::scale_size_manual(values=clustersObject$moreArgs$lwd),
+      ## X axis ------------------
+      scaleXCoordinates(chr=as.character(seqnames(clustersObject$coordinates)),
+                        limits=c(start(clustersObject$coordinates),
+                                 end(clustersObject$coordinates))),
+      ## Blank y axis ----------
+      themeYblank())
   } else {
-    clustersPlot <- emptyPlot(clustersObject$coordinates, 1)
+    clustersPlot <- list(emptyPlot(clustersObject$coordinates, 1),
+                         themeYblank())
   }
 
   return(clustersPlot)
@@ -197,34 +204,39 @@ plot.tfsRegulome <- function(tfsObject) {
     tfs.df$midpoint <- tfs.df$start + tfs.df$width/2
 
     ## Plot TFs
-    tfsPlot <- list(## Plot unions TF to chromatin
+    tfsPlot <- list(
+      ## Plot unions TF to chromatin -----------------
       ggplot2::geom_segment(data=tfs.df,
                                  ggplot2::aes(x=position, xend=midpoint,
                                      y=height, yend=0.84, color=coloc),
                                  lwd=0.3),
-      ## Add scale for union lines
+      ## Add scale for union lines -------------------
       ggplot2::scale_colour_gradient(low="light grey", high="black",
                             guide=FALSE),
-      ## Plot lines for TF binding
+      ## Plot lines for TF binding --------------------
       ggplot2::geom_segment(data=tfs.df,
                    ggplot2::aes(x=start, xend=end, y=0.84, yend=0.84),
                    color=tfsObject$col, lwd=2),
-      ## Plot circles with TF
+      ## Plot circles with TF -------------------------
       ggplot2::geom_point(data=points.df,
                  ggplot2::aes(x=position, y=height),
                  pch=21, size=points.df$sizes, fill="grey",
                  color=tfsObject$col),
-      ## Plot TF name in circles
+      ## Plot TF name in circles -----------------------
       ggplot2::geom_text(data=unique(points.df[,-4]), ## Plot TF labels
                 ggplot2::aes(x=position, y=height, label=TF),
                 size=4),
       ## Label for Y axis name
-      ggplot2::ylab(paste0(tfsObject$name,"\n")),
-      ## Limits for plot
-      ggplot2::xlim(start(ranges(tfsObject$coordinates)),
-           end(ranges(tfsObject$coordinates))))
+      ggplot2::ylab(paste0(tfsObject$name)),
+      ## X axis ------------------
+      scaleXCoordinates(chr=as.character(seqnames(tfsObject$coordinates)),
+                        limits=c(start(tfsObject$coordinates),
+                                 end(tfsObject$coordinates))),
+      ## Blank y axis ----------
+      themeYblank(title=T))
   } else {
-    tfsPlot <- emptyPlot(tfsObject$coordinates, 1)
+    tfsPlot <- list(emptyPlot(tfsObject$coordinates, 1),
+                    themeYblank())
   }
 
   return(tfsPlot)
@@ -248,22 +260,29 @@ plot.genesRegulome <- function(genesObject) {
     genesPlot <- list(ggplot2::geom_segment(data=genes.df,
                                    ggplot2::aes(x=start, y=stepping,
                                        xend=end, yend=stepping)),
+                      ## Draw gene exons ----------
                       ggplot2::geom_rect(data=genes.df[genes.df$type=="EXON",],
                                 ggplot2::aes(xmin=start, xmax=end,
                                     ymin=(stepping-0.3), ymax=(stepping+0.3)),
                                 fill=genes.df$color[genes.df$type=="EXON"],
                                 color="black"),
+                      ## Add gene name ------------
                       ggplot2::geom_text(data=genes.df[genes.df$type=="GENE",],
                                 ggplot2::aes(x=modEnd, y=stepping,
                                     label=gene_name),
                                 hjust=0, fontface=3,
-                                size=3)
-    )
+                                size=3),
+                      ## X axis ------------------
+                      scaleXCoordinates(chr=as.character(seqnames(genesObject$coordinates)),
+                                        limits=c(start(genesObject$coordinates),
+                                                 end(genesObject$coordinates))),
+                      ## Blank y axis ----------
+                      themeYblank())
   } else {
-    genesPlot <- emptyPlot(genesObject$coordinates, 1)
+    genesPlot <- list(emptyPlot(genesObject$coordinates, 1),
+                      themeYblank())
   }
   return(genesPlot)
-  # ggplot() + genesPlot
 }
 
 #' Smooth Coverage/Contacts
@@ -331,6 +350,9 @@ emptyPlot <- function(coordinates, y) {
   emptyPlot <- list(ggplot2::geom_point(data=df.empty,
                               ggplot2::aes(x=x, y=y),
                               color=NA),
-                    ggplot2::xlab(""), ggplot2::ylab(""))
+                    ggplot2::xlab(""), ggplot2::ylab(""),
+                    scaleXCoordinates(chr=as.character(seqnames(coordinates)),
+                                      limits=c(start(coordinates),
+                                               end(coordinates))))
   return(emptyPlot)
 }

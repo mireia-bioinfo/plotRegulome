@@ -1,9 +1,9 @@
 ## Minimal example for testing
-devtools::load_all(".")
+devtools::load_all()
 
 coordinates <- GRanges("chr13:28444157-28550368")
-snps.type <- ""
-contacts.type <- ""#183446
+snps.type <- "diagram"
+contacts.type <- 183446
 maps.type <- "chromatinClassesReduced"
 cluster.type <- "enhancerClusters"
 tfs.type <- "adult"
@@ -19,6 +19,7 @@ files.contacts <- paste0(path,
 
 files.contacts <- ""
 
+devtools::load_all()
 ## General plot --------------------------
 plotRegulome(coordinates=coordinates,
              snps.type=snps.type,
@@ -33,3 +34,22 @@ contactsObject <- create_contactsRegulome(coordinates=coordinates,
                                           contacts.type=files.contacts,
                                           genome="hg19",
                                           path=path)
+
+snpsObject <- create_snpsRegulome(coordinates=coordinates,
+                                          snps.type=snps.type,
+                                          genome="hg19",
+                                  scaling=contactsObject$moreArgs$maxContact,
+                                          path=path)
+
+mapsObject <- create_mapsRegulome(coordinates=coordinates,
+                                  maps.type=maps.type,
+                                  path=path)
+
+clustersObject <- create_clustersRegulome(coordinates=coordinates,
+                                          cluster.type=cluster.type,
+                                          path=path)
+tfsObject <- create_tfsRegulome(coordinates=coordinates,
+                                tfs.type=tfs.type,
+                                path=path)
+
+ggplot2::ggplot() + plot(tfsObject)
