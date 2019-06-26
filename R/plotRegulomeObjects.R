@@ -47,17 +47,20 @@ plot.snpsRegulome <- function(snpsObject) {
       ## SNP scale --------------
       ggplot2::scale_fill_continuous(high = snpsObject$col,
                             low = "white",
-                            name="-log10 P-value",
+                            name=paste0("SNPs dataset\n",
+                                        Hmisc::capitalize(snpsObject$name)),
                             limits=c(0, NA)),
       ggplot2::scale_color_continuous(high = snpsObject$col,
                              low = "white",
-                             name="-log10 P-value",
+                             name=paste0("SNPs dataset\n",
+                                         Hmisc::capitalize(snpsObject$name)),
                              limits=c(0, NA)),
       ## SNP legends -------------
       ggplot2::guides(fill=ggplot2::guide_colorbar(direction = "horizontal",
                                                   title.position="top",
                                                   barwidth=8),
                       alpha=FALSE),
+      ggplot2::ylab(expression("SNPs "*-log[10]*" P-value")),
       ## X axis ------------------
       scaleXCoordinates(chr=as.character(seqnames(snpsObject$coordinates)),
                         limits=c(start(snpsObject$coordinates),
@@ -100,7 +103,7 @@ plot.contactsRegulome <- function(contactsObject) {
                y=-0, pch=25, color="black", fill="black",
                size=3),
       ## Y axis label -----------------------------------
-      ggplot2::ylab("Virtual 4C"),
+      ggplot2::ylab("ChiCAGO score"),
       ## X axis ------------------
       scaleXCoordinates(chr=as.character(seqnames(contactsObject$coordinates)),
                         limits=c(start(contactsObject$coordinates),

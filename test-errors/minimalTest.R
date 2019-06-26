@@ -2,7 +2,7 @@
 devtools::load_all()
 
 coordinates <- GRanges("chr13:28444157-28550368")
-snps.type <- "diagram"
+snps.type <- "70KforT2D"
 contacts.type <- 183446
 maps.type <- "chromatinClassesReduced"
 cluster.type <- "enhancerClusters"
@@ -17,7 +17,7 @@ files.contacts <- paste0(path,
                          "/",
                          "PI_Merged_Digest_Human_HindIII_BaitID", contacts.type, "_bg", c(0,3,5), "_score.bw")
 
-files.contacts <- ""
+# files.contacts <- ""
 
 devtools::load_all()
 ## General plot --------------------------

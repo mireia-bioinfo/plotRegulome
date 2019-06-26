@@ -12,7 +12,8 @@ themeYblank <- function(title=F, ...) {
   if(title) {
     theme <- cowplot::theme_cowplot() + ggplot2::theme(axis.text.y=ggplot2::element_blank(),
                                                        axis.ticks.y=ggplot2::element_blank(),
-                                                       axis.line.y=ggplot2::element_blank())
+                                                       axis.line.y=ggplot2::element_blank(),
+                                                       ...)
   } else {
     theme <- cowplot::theme_cowplot() + ggplot2::theme(axis.text.y=ggplot2::element_blank(),
                                                        axis.title.y=ggplot2::element_blank(),
@@ -22,6 +23,29 @@ themeYblank <- function(title=F, ...) {
   }
 
   return(theme)
+}
+
+themeXYblank <- function(title=F, ...) {
+  if(title) {
+    theme <- cowplot::theme_cowplot() + ggplot2::theme(axis.text.x=ggplot2::element_blank(),
+                                                       axis.title.x=ggplot2::element_blank(),
+                                                       axis.ticks.x=ggplot2::element_blank(),
+                                                       axis.line.x=ggplot2::element_blank(),
+                                                       axis.text.y=ggplot2::element_blank(),
+                                                       axis.ticks.y=ggplot2::element_blank(),
+                                                       axis.line.y=ggplot2::element_blank(),
+                                                       ...)
+  } else {
+    theme <- cowplot::theme_cowplot() + ggplot2::theme(axis.text.x=ggplot2::element_blank(),
+                                                       axis.title.x=ggplot2::element_blank(),
+                                                       axis.ticks.x=ggplot2::element_blank(),
+                                                       axis.line.x=ggplot2::element_blank(),
+                                                       axis.text.y=ggplot2::element_blank(),
+                                                       axis.title.y=ggplot2::element_blank(),
+                                                       axis.ticks.y=ggplot2::element_blank(),
+                                                       axis.line.y=ggplot2::element_blank(),
+                                                       ...)
+  }
 }
 
 scaleXCoordinates <- function(chr,

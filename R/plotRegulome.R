@@ -87,7 +87,7 @@ plotRegulome <- function(coordinates,
       length(contactsObject$value)>0) {
     scale <- max(-log10(snpsObject$value$PVAL), na.rm=T)/contactsObject$moreArgs$maxContact
     p1 <- p1 + ggplot2::scale_y_continuous(sec.axis = ggplot2::sec_axis(~.*scale,
-                                                                        name=snpsObject$name))
+                                                                        name=expression("SNPs "*-log[10]*" P-value")))
   }
 
   ## Maps & TFs -----------------------
@@ -108,7 +108,7 @@ plotRegulome <- function(coordinates,
 
   ## Compose main plot --------------
   main <- cowplot::plot_grid(p1 + themeXblank(legend.position="none"),
-                             p2 + themeXblank(legend.position="none"),
+                             p2 + themeXYblank(title=T, legend.position="none"),
                              p3,
                              nrow=3, align="v", rel_heights = c(0.4,0.3,0.3))
 
