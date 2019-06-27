@@ -47,11 +47,11 @@ plot.snpsRegulome <- function(snpsObject) {
       ## SNP scale --------------
       ggplot2::scale_fill_continuous(high = snpsObject$col,
                             low = "white",
-                            name=bquote(atop(bold("SNPs dataset"), .(Hmisc::capitalize(snpsObject$name)))),
+                            name=bquote(atop(bold(.(Hmisc::capitalize(snpsObject$name))~"SNPs"), -"log"[10]~"P-value")),
                             limits=c(0, NA)),
       ggplot2::scale_color_continuous(high = snpsObject$col,
                              low = "white",
-                             name=bquote(atop(bold("SNPs dataset"), .(Hmisc::capitalize(snpsObject$name)))),
+                             name=bquote(atop(bold(.(Hmisc::capitalize(snpsObject$name))~"SNPs"), -"log"[10]~"P-value")),
                              limits=c(0, NA)),
       ## SNP legends -------------
       ggplot2::guides(fill=ggplot2::guide_colorbar(direction = "horizontal",

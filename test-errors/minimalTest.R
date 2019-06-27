@@ -2,7 +2,7 @@
 devtools::load_all()
 
 coordinates <- GRanges("chr13:28444157-28550368")
-snps.type <- "70KforT2D"
+snps.type <- "70kfort2d"
 contacts.type <- 183446
 maps.type <- "chromatinClassesReduced"
 cluster.type <- "enhancerClusters"

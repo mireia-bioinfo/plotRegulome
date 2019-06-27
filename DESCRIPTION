@@ -16,6 +16,5 @@ Imports:
     dplyr,
     cowplot,
     ggplot2,
-    ggbio,
     rtracklayer,
     Hmisc
