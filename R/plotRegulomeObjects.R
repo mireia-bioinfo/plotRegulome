@@ -49,7 +49,7 @@ plot.snpsRegulome <- function(snpsObject) {
                              name=bquote(atop(bold(.(Hmisc::capitalize(snpsObject$name))~"SNPs"), -"log"[10]~"P-value")),
                              limits=c(0, NA)),
       ## SNP legends -------------
-      ggplot2::guides(fill=ggplot2::guide_colorbar(direction = "horizontal",
+      ggplot2::guides(color=ggplot2::guide_colorbar(direction = "horizontal",
                                                   title.position="top",
                                                   barwidth=8),
                       alpha=FALSE),
