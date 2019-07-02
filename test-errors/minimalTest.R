@@ -7,7 +7,7 @@ contacts.type <- 183446
 maps.type <- "chromatinClassesReduced"
 cluster.type <- "enhancerClusters"
 tfs.type <- "adult"
-path <- "~/tools/IRB/isletregulome_shiny/static_data/RData/"
+path <- "../isletregulome_shiny/static_data/RData/"
 
 files.contacts <- paste0(path,
                          "hg19/",
@@ -52,4 +52,5 @@ tfsObject <- create_tfsRegulome(coordinates=coordinates,
                                 tfs.type=tfs.type,
                                 path=path)
 
-ggplot2::ggplot() + plot(tfsObject)
+ggplot2::ggplot() + plot(contactsObject)
+ggplot2::ggplot() + plot(snpsObject)

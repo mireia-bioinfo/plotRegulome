@@ -20,10 +20,11 @@ generateLegendGG <- function(contactsObject,
   if (contactsObject$name!="") {
     df1 <- data.frame("x"=rep(1, length(contactsObject$col)+1),
                       "y"=rep(1, length(contactsObject$col)+1),
-                      "class"=c(paste("CHiCAGO score", c("<3", "3-5", ">5")),
-                                paste0("Viewpoint (", contactsObject$name, ")")))
+                      "class"=c("0", "3", "5", "Viewpoint"),
+                      stringsAsFactors = F)
     contactsObject$col <- c(contactsObject$col, "black")
     names(contactsObject$col) <- df1$class
+
   } else {
     df1 <- data.frame()
   }
@@ -45,16 +46,16 @@ generateLegendGG <- function(contactsObject,
                                             size=4, fill="black"),
                           ggplot2::scale_color_manual(values=contactsObject$col,
                                                       name="Virtual 4C",
-                                                      labels=c("CHiCAGO score <3",
-                                                               "CHiCAGO score >5",
-                                                               "CHiCAGO score 3-5",
-                                                               bquote('Viewpoint ('~italic(.(contactsObject$name))~")"))),
+                                                      labels=c("0"="CHiCAGO score <3",
+                                                               "3"="CHiCAGO score 3-5",
+                                                               "5"="CHiCAGO score >5",
+                                                               "Viewpoint"=bquote('Viewpoint ('~italic(.(contactsObject$name))~")"))),
                           ggplot2::scale_shape_manual(values=c(rep(15, 3), 25),
                                                       name="Virtual 4C",
-                                                      labels=c("CHiCAGO score <3",
-                                                               "CHiCAGO score >5",
-                                                               "CHiCAGO score 3-5",
-                                                               bquote('Viewpoint ('~italic(.(contactsObject$name))~")"))))
+                                                      labels=c("0"="CHiCAGO score <3",
+                                                               "3"="CHiCAGO score 3-5",
+                                                               "5"="CHiCAGO score >5",
+                                                               "Viewpoint"=bquote('Viewpoint ('~italic(.(contactsObject$name))~")"))))
 
   otherLegend <- list(ggplot2::geom_line(data=df3,
                                          ggplot2::aes(x, y, size=class,

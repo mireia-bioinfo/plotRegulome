@@ -34,10 +34,9 @@ plot.snpsRegulome <- function(snpsObject) {
       ggplot2::geom_point(data=df,
                  ggplot2::aes(start, scales::rescale(-log10(PVAL),
                                                      c(0, snpsObject$moreArgs$scaleTo)),
-                     fill=-log10(PVAL),
                      color=-log10(PVAL),
                      alpha=-log10(PVAL)),
-                 size=1, pch=21),
+                 size=1, pch=19),
       ## SNP labels -------------
       ggrepel::geom_text_repel(data=df,
                                ggplot2::aes(start, scales::rescale(-log10(PVAL),
@@ -45,10 +44,6 @@ plot.snpsRegulome <- function(snpsObject) {
                                    label=id.show),
                                size=4),
       ## SNP scale --------------
-      ggplot2::scale_fill_continuous(high = snpsObject$col,
-                            low = "white",
-                            name=bquote(atop(bold(.(Hmisc::capitalize(snpsObject$name))~"SNPs"), -"log"[10]~"P-value")),
-                            limits=c(0, NA)),
       ggplot2::scale_color_continuous(high = snpsObject$col,
                              low = "white",
                              name=bquote(atop(bold(.(Hmisc::capitalize(snpsObject$name))~"SNPs"), -"log"[10]~"P-value")),
@@ -88,14 +83,20 @@ plot.contactsRegulome <- function(contactsObject) {
     contacts.smooth <- lapply(contactsObject$value,
                               as.data.frame)
     contacts.smooth <- do.call(rbind, contacts.smooth)
-    contacts.smooth$color <- unlist(mapply(rep, contactsObject$col, each=len))
+    contacts.smooth$type <- unlist(mapply(rep, names(contactsObject$col), each=len))
+    labs <- c("0"="CHiCAGO score <3",
+              "3"="CHiCAGO score 3-5",
+              "5"="CHiCAGO score >5")
 
     contactPlot <- list(
       ## Plot rects (histogram-like) coverage -----------
       ggplot2::geom_rect(data=contacts.smooth,
                 ggplot2::aes(xmin=start, xmax=end,
-                    ymin=0, ymax=meanScore),
-                fill=contacts.smooth$color),
+                    ymin=0, ymax=meanScore, fill=type)),
+      ## Modify colors ----------------------------------
+      ggplot2::scale_fill_manual(values=contactsObject$col,
+                                 labels=labs,
+                                 name="Virtual 4C"),
       ## Add triange for viewpoint (bottom) -------------
       ggplot2::annotate("point", x=contactsObject$moreArgs$viewpoint,
                y=-0, pch=25, color="black", fill="black",
