@@ -4,22 +4,44 @@
 \alias{create_snpsRegulome}
 \title{Create snpsRegulome Object}
 \usage{
-create_snpsRegulome(coordinates, snps.type, col = "dark red", genome,
-  top = 3, maxContacts = NULL, path = "~/data/IsletRegulome/Rdata/")
+create_snpsRegulome(coordinates, snps_dataset = "",
+  snps_col = "dark red", genome = "hg19", top = 3,
+  snp_scaling = NULL, path = "~/data/IRB/")
 }
 \arguments{
-\item{coordinates}{GRanges object with coordinates you want to plot.}
+\item{coordinates}{Either a GRanges object, data.frame or character string (chr11:17227951-17589050) indicating
+the coordinates for the region the user wants to plot.}
 
-\item{snps.type}{GWAS SNPs dataset name to use for the analysis. The value can be: diagram, magic, 70KforT2D or ""
+\item{snps_dataset}{GWAS SNPs dataset name to use for the analysis. The value can be: diagram, magic,
+70KforT2D or "".
 (default, no SNPs will be plotted).}
 
-\item{col}{Color for the GWAS SNPs. Default: "dark red"}
+\item{snps_col}{Color for the GWAS SNPs. Default: "dark red"}
 
 \item{genome}{Character string indicating the genome for the coordinates. Default: hg19.}
 
-\item{top}{Number of most significant SNPs for showing ID. Default: 3.}
-
-\item{maxContacts}{Maximum score for contacts in contactsRegulome object. If no contacts present, should be NULL.}
+\item{path}{Path containing the genomes folder (for example "hg19").
+Default: "http://gattaca.imppc.org/genome_browser/lplab/IsletRegulome/Rdata/"}
+}
+\value{
+An object of class \code{snpsRegulome}, which is basically a list with the following
+        attributes:
+        \itemize{
+            \item{\strong{name}: Name of the selected SNP dataset.}
+            \item{\strong{col}: Color for plotting the SNPs.}
+            \item{\strong{genome}: Genome build.}
+            \item{\strong{coordinates}: Selected coordinates to plot as a \code{GRanges} object.}
+            \item{\strong{value}: \code{GRanges} object containing all SNP values in \code{coordinates}.}
+            \item{\strong{moreArgs}: Additional arguments, which are:
+                  \itemize{
+                      \item{\strong{top}: contains the
+                            number of SNPs with lower P-values whose name will be plot}
+                      \item{\strong{scaleTo}: parameter that includes a scaling parameter in case
+                            virtual4C is also plot along SNPs (it is the maximum virtual4C value and
+                            if no virtual4C is plot, is the maximum SNP -log10 p-value).}
+                      }
+                 }
+            }
 }
 \description{
 This function loads the GWAS information for SNPs from the specified dataset, selects those

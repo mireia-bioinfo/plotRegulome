@@ -4,19 +4,43 @@
 \alias{create_tfsRegulome}
 \title{Create tfsRegulome Object}
 \usage{
-create_tfsRegulome(coordinates, tfs.type, col = "dark blue",
-  position.y = 0.5, genome, path = "~/data/IsletRegulome/Rdata/")
+create_tfsRegulome(coordinates, tfs_dataset, tfs_col = "dark blue",
+  position_y = 0.5, genome = "hg19", path = "~/data/IRB/")
 }
 \arguments{
-\item{coordinates}{GRanges object with coordinates you want to plot.}
+\item{coordinates}{Either a GRanges object, data.frame or character string (chr11:17227951-17589050) indicating
+the coordinates for the region the user wants to plot.}
 
-\item{tfs.type}{Name of the TF dataset to plot. The value can be: adult, progenitors, structure or "" (don't plot TFs).}
+\item{tfs_dataset}{Name of the TF dataset to plot. The value can be: adult, progenitors, structure or ""
+(don't plot TFs).}
 
-\item{col}{Color for the tfs circles border.}
+\item{tfs_col}{Color for the tfs circles border.}
+
+\item{position_y}{Number from 0 (bottom) to 1 (top) indicating the position at which the circles should
+be plotted. Default = 0.5.}
 
 \item{genome}{Character string indicating the genome for the coordinates. Default: hg19.}
 
-\item{position}{Position of the center of TFs circle, should be between c(0,1).}
+\item{path}{Path containing the genomes folder (for example "hg19").
+Default: "http://gattaca.imppc.org/genome_browser/lplab/IsletRegulome/Rdata/"}
+}
+\value{
+An object of class \code{tfsRegulome}, which is basically a list with the following
+        attributes:
+        \itemize{
+            \item{\strong{name}: Name of selected transcription factor dataset.}
+            \item{\strong{col}: Character vector with the color of the enhancer clusters.}
+            \item{\strong{genome}: Genome build.}
+            \item{\strong{coordinates}: Selected coordinates to plot as a \code{GRanges} object.}
+            \item{\strong{value}: \code{GRanges} object containing coordinates for the transcription factor binding
+                sites and the name of the TF that is binding.}
+            \item{\strong{moreArgs}: Additional arguments, which include:
+                \itemize{
+                    \item{\strong{positionY}: Information on the linewidth for each class of enhancer cluster
+                        feature.}
+                    }
+                 }
+            }
 }
 \description{
 This function load the TFBS data, selects those binding sites present in \code{coordinates} and

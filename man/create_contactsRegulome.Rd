@@ -4,20 +4,38 @@
 \alias{create_contactsRegulome}
 \title{Create contactsRegulome Object}
 \usage{
-create_contactsRegulome(coordinates, contacts.type, col = c(`0` = "grey", `3`
-  = "blue", `5` = "dark orange"), genome, smooth = 5,
-  path = "~/data/IsletRegulome/Rdata/")
+create_contactsRegulome(coordinates, contacts_dataset,
+  contacts_col = c(`0` = "grey", `3` = "blue", `5` = "dark orange"),
+  genome = "hg19", path = "~/data/IRB/")
 }
 \arguments{
-\item{coordinates}{GRanges object with coordinates you want to plot.}
+\item{coordinates}{Either a GRanges object, data.frame or character string (chr11:17227951-17589050) indicating
+the coordinates for the region the user wants to plot.}
 
-\item{contacts.type}{ID for the bait you want to plot. See correspondance in \url{http://gattaca.imppc.org/genome_browser/lplab/IsletRegulome/Rdata/hg19/baitID_and_name_virtual4C.rda}}
-
-\item{col}{Colors for plotting virtual 4C data. Defaults to c("grey", "blue", "dark orange").}
+\item{contacts_dataset}{BaitID or bait gene name for the virtual 4C data you want to plot.}
 
 \item{genome}{Character string indicating the genome for the coordinates. Default: hg19.}
 
-\item{smooth}{Arbitrary number for smoothing contact signal. Default: 5.}
+\item{path}{Path containing the genomes folder (for example "hg19").
+Default: "http://gattaca.imppc.org/genome_browser/lplab/IsletRegulome/Rdata/"}
+}
+\value{
+An object of class \code{contactsRegulome}, which is basically a list with the following
+        attributes:
+        \itemize{
+            \item{\strong{name}: Name of bait for the selected virtual4C data.}
+            \item{\strong{col}: Color for plotting virtual4C data, grouping by chicago scores (0=0-3; 3=3-5; 5=>5).}
+            \item{\strong{genome}: Genome build.}
+            \item{\strong{coordinates}: Selected coordinates to plot as a \code{GRanges} object.}
+            \item{\strong{value}: \code{GRanges} object containing all CHiCAGO scores in \code{coordinates}.}
+            \item{\strong{moreArgs}: Additional arguments, which are:
+                  \itemize{
+                      \item{\strong{viewpoint}: Position for the bait, will drow a triangle in this position.}
+                      \item{\strong{maxContact}: Maximum CHiCAGO score in coordinates that will be used for
+                            scaling SNP data in case it is also plot.}
+                      }
+                 }
+            }
 }
 \description{
 This function uses virtual 4C data (3 bigWig files, scores 0, 3 and 5) to generate an object containing

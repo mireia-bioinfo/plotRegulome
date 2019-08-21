@@ -2,34 +2,54 @@
 #'
 #' @param coordinates Either a GRanges object, data.frame or character string (chr11:17227951-17589050) indicating
 #' the coordinates for the region the user wants to plot.
-#' @param snps.type GWAS SNPs dataset name to use for the analysis. The value can be: diagram, magic, 70KforT2D or ""
+#' @param snps_dataset GWAS SNPs dataset name to use for the analysis. The value can be: diagram, magic,
+#' 70KforT2D or "".
 #' (default, no SNPs will be plotted).
-#' @param snps.col Color for the GWAS SNPs. Default: "dark red"
-#' @param contacts.type ID for the bait you want to plot. See correspondance in \url{http://gattaca.imppc.org/genome_browser/lplab/IsletRegulome/Rdata/hg19/baitID_and_name_virtual4C.rda}
-#' @param maps.type Name of the chromatin maps to plot. The value can be: chromatinClasses, chromatinClassesReduced, chromatinStates, openChromatinClasses, progenitors or "" (default, no map).
-#' @param cluster.type Name of the cluster to plot. The value can be: enhancerClusters, enhancerHubs, stretchEnhancers, superEnhancers or "" (no clusters).
-#' @param cluster.col Color for the clusters. Default: "dark green"
-#' @param tfs.type Name of the TF dataset to plot. The value can be: adult, progenitors, structure or "" (don't plot TFs).
-#' @param tfs.col Color for the tfs circles border.
-#' @param showLongestTranscript When plotting gene data, set to TRUE (default) if you want to reduce the number of transcripts by only plotting the longest transcript per gene. If set to FALSE, will plot all the transcripts.
+#' @param snps_col Color for the GWAS SNPs. Default: "dark red"
+#' @param contacts_dataset BaitID or bait gene name for the virtual 4C data you want to plot.
+#' @param maps_dataset Name of the chromatin maps to plot. The value can be: chromatinClasses,
+#' chromatinClassesReduced, chromatinStates, openChromatinClasses, progenitors or "" (default, no map).
+#' @param cluster_dataset Name of the cluster to plot. The value can be: enhancerClusters, enhancerHubs,
+#' stretchEnhancers, superEnhancers or "" (no clusters).
+#' @param cluster_col Color for the clusters. Default: "dark green"
+#' @param tfs_dataset Name of the TF dataset to plot. The value can be: adult, progenitors, structure or ""
+#' (don't plot TFs).
+#' @param tfs_col Color for the tfs circles border.
+#' @param genes_col Named character vector with the colors for each type of feture plotted in the gene
+#' annotation track.
+#' @param showLongestTranscript When plotting gene data, set to TRUE (default) if you want to reduce the
+#' number of transcripts by only plotting the longest transcript per gene. If set to FALSE, will plot all
+#' the transcripts.
 #' @param genome Character string indicating the genome for the coordinates. Default: hg19.
-#' @param path Path containing the genomes folder (for example "hg19"). Default: "http://gattaca.imppc.org/genome_browser/lplab/IsletRegulome/Rdata/"
+#' @param path Path containing the genomes folder (for example "hg19").
+#' Default: "http://gattaca.imppc.org/genome_browser/lplab/IsletRegulome/Rdata/"
 #' @return A ggplot2 object that can be plotted or saved with ggsave.
 #' @export
 #' @import GenomicRanges
 
 plotRegulome <- function(coordinates,
-                         snps.type="",
-                         snps.col="dark red",
-                         contacts.type="",
-                         maps.type="",
-                         cluster.type="",
-                         cluster.col="dark green",
-                         tfs.type="",
-                         tfs.col="dark blue",
+                         # SNPs -------
+                         snps_dataset="",
+                         snps_col="dark red",
+                         # Contacts -------
+                         contacts_dataset="",
+                         contacts_col=c("0"="grey", "3"="blue", "5"="dark orange"),
+                         # Maps -------
+                         maps_dataset="",
+                         # Clusters -------
+                         cluster_dataset="",
+                         cluster_col="dark green",
+                         # TFs -------
+                         tfs_dataset="",
+                         tfs_col="dark blue",
+                         # Genes -------
+                         genes_col=c("gene"="dark grey",
+                                     "spec"="darkorchid3",
+                                     "lnc"="black"),
                          showLongestTranscript=TRUE,
+                         # General -------
                          genome="hg19",
-                         path="http://gattaca.imppc.org/genome_browser/lplab/IsletRegulome/Rdata/") {
+                         path="~/data/IRB/") {
 
   if (class(coordinates)=="GRanges") {
     coordinates <- coordinates
@@ -43,31 +63,34 @@ plotRegulome <- function(coordinates,
 
   ###### Define Objects
   contactsObject <- create_contactsRegulome(coordinates=coordinates,
-                                            contacts.type=contacts.type,
+                                            contacts_dataset=contacts_dataset,
+                                            contacts_col=contacts_col,
                                             genome=genome,
                                             path=path)
 
   snpsObject <- create_snpsRegulome(coordinates=coordinates,
-                                    snps.type=snps.type,
-                                    scaling=contactsObject$moreArgs$maxContact,
+                                    snps_dataset=snps_dataset,
+                                    snps_col=snps_col,
+                                    snps_scaling=contactsObject$moreArgs$maxContact,
                                     genome=genome,
                                     path=path)
 
   mapsObject <- create_mapsRegulome(coordinates=coordinates,
-                                    maps.type = maps.type,
+                                    maps_dataset = maps_dataset,
                                     genome=genome,
                                     path=path)
 
   clustersObject <- create_clustersRegulome(coordinates=coordinates,
-                                            cluster.type=cluster.type,
+                                            cluster_dataset=cluster_dataset,
+                                            cluster_col=cluster_col,
                                             genome=genome,
                                             path=path)
 
   tfsObject <- create_tfsRegulome(coordinates=coordinates,
-                                  tfs.type=tfs.type,
+                                  tfs_dataset=tfs_dataset,
                                   genome=genome,
-                                  col="dark blue",
-                                  position.y=0.5,
+                                  tfs_col=tfs_col,
+                                  position_y=0.5,
                                   path=path)
 
   genesObject <- create_genesRegulome(coordinates=coordinates,

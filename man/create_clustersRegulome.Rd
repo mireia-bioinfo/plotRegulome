@@ -4,17 +4,40 @@
 \alias{create_clustersRegulome}
 \title{Create clustersRegulome Object}
 \usage{
-create_clustersRegulome(coordinates, cluster.type, col = "dark green", genome,
-  path = "~/data/IsletRegulome/Rdata/")
+create_clustersRegulome(coordinates, cluster_dataset,
+  cluster_col = "dark green", genome = "hg19", path = "~/data/IRB/")
 }
 \arguments{
-\item{coordinates}{GRanges object with coordinates you want to plot.}
+\item{coordinates}{Either a GRanges object, data.frame or character string (chr11:17227951-17589050) indicating
+the coordinates for the region the user wants to plot.}
 
-\item{cluster.type}{Name of the cluster to plot. The value can be: enhancerClusters, enhancerHubs, stretchEnhancers, superEnhancers or "" (no clusters).}
+\item{cluster_dataset}{Name of the cluster to plot. The value can be: enhancerClusters, enhancerHubs,
+stretchEnhancers, superEnhancers or "" (no clusters).}
 
-\item{col}{Color for plotting clusters. Default: "dark green".}
+\item{cluster_col}{Color for the clusters. Default: "dark green"}
 
 \item{genome}{Character string indicating the genome for the coordinates. Default: hg19.}
+
+\item{path}{Path containing the genomes folder (for example "hg19").
+Default: "http://gattaca.imppc.org/genome_browser/lplab/IsletRegulome/Rdata/"}
+}
+\value{
+An object of class \code{clustersRegulome}, which is basically a list with the following
+        attributes:
+        \itemize{
+            \item{\strong{name}: Name of selected enhancer cluster dataset.}
+            \item{\strong{col}: Character vector with the color of the enhancer clusters.}
+            \item{\strong{genome}: Genome build.}
+            \item{\strong{coordinates}: Selected coordinates to plot as a \code{GRanges} object.}
+            \item{\strong{value}: \code{GRanges} object containing coordinates for the enhancer clusters and
+                the class of the line that will be drawn.}
+            \item{\strong{moreArgs}: Additional arguments, which include:
+                \itemize{
+                    \item{\strong{lwd}: Information on the linewidth for each class of enhancer cluster
+                        feature.}
+                    }
+                 }
+            }
 }
 \description{
 This function loads the selected cluster classification, selects the clusters present in \code{coordinates}

@@ -2,47 +2,57 @@
 #'
 #' This function loads the GWAS information for SNPs from the specified dataset, selects those
 #' present in \code{coordinates} and adds all the elements needed for plotting.
-#' @param coordinates GRanges object with coordinates you want to plot.
-#' @param snps.type GWAS SNPs dataset name to use for the analysis. The value can be: diagram, magic, 70KforT2D or ""
-#' (default, no SNPs will be plotted).
-#' @param col Color for the GWAS SNPs. Default: "dark red"
-#' @param genome Character string indicating the genome for the coordinates. Default: hg19.
-#' @param top Number of most significant SNPs for showing ID. Default: 3.
-#' @param scaling Value for scaling the -log10(PVAL) to, when plotted together with another track. Will add a secondary y axis.
-#' If no scaling should be applied, leave blank (NULL).
-#' @param path Path where the datasets are saved.
+#' @inheritParams plotRegulome
+#' @return An object of class \code{snpsRegulome}, which is basically a list with the following
+#'         attributes:
+#'         \itemize{
+#'             \item{\strong{name}: Name of the selected SNP dataset.}
+#'             \item{\strong{col}: Color for plotting the SNPs.}
+#'             \item{\strong{genome}: Genome build.}
+#'             \item{\strong{coordinates}: Selected coordinates to plot as a \code{GRanges} object.}
+#'             \item{\strong{value}: \code{GRanges} object containing all SNP values in \code{coordinates}.}
+#'             \item{\strong{moreArgs}: Additional arguments, which are:
+#'                   \itemize{
+#'                       \item{\strong{top}: contains the
+#'                             number of SNPs with lower P-values whose name will be plot}
+#'                       \item{\strong{scaleTo}: parameter that includes a scaling parameter in case
+#'                             virtual4C is also plot along SNPs (it is the maximum virtual4C value and
+#'                             if no virtual4C is plot, is the maximum SNP -log10 p-value).}
+#'                       }
+#'                  }
+#'             }
 #' @export
 #' @import GenomicRanges
 create_snpsRegulome <- function(coordinates,
-                                snps.type,
-                                col="dark red",
+                                snps_dataset="",
+                                snps_col="dark red",
                                 genome="hg19",
                                 top=3,
-                                scaling=NULL,
-                                path="~/data/IsletRegulome/Rdata/") {
+                                snps_scaling=NULL,
+                                path="~/data/IRB/") {
   ## Load SNPs data
-  if (snps.type!="") {
+  if (snps_dataset!="") {
     load(paste0(path,
-                    genome, "/", genome, "_snps_", snps.type, "_",
-                    as.character(seqnames(coordinates)), ".rda"))
+                genome, "/snps/", genome, "_snps_", snps_dataset, "_",
+                as.character(seqnames(coordinates)), ".rda"))
   } else {
     snps <- GRanges() # create empty GRanges if no SNPs to plot
   }
 
   ## Create snpsRegulome object
-  snps.sel <- subsetByOverlaps(snps, coordinates)
+  snps_sel <- subsetByOverlaps(snps, coordinates)
 
   ## Return paramters needed for scaling
-  if (length(snps.sel)>0) max <- max(-log10(snps.sel$PVAL)) else max <- NULL
-  if (is.null(scaling)) scaleTo <- max else scaleTo <- scaling # scale to max pval if no scaling
+  if (length(snps_sel)>0) max <- max(-log10(snps_sel$PVAL)) else max <- NULL
+  if (is.null(snps_scaling)) scale_to <- max else scale_to <- snps_scaling # scale to max pval if no scaling
 
-  snps <- list("name"=snps.type,
-               "col"=col,
+  snps <- list("name"=snps_dataset,
+               "col"=snps_col,
                "genome"=genome,
                "coordinates"=coordinates,
-               "value"=snps.sel,
+               "value"=snps_sel,
                "moreArgs"=list("top"=top,
-                               "scaleTo"=scaleTo))
+                               "scaleTo"=scale_to))
   snps <- structure(snps, class="snpsRegulome")
 
   return(snps)
@@ -52,67 +62,68 @@ create_snpsRegulome <- function(coordinates,
 #'
 #' This function uses virtual 4C data (3 bigWig files, scores 0, 3 and 5) to generate an object containing
 #' the data present in \code{coordinates} and all the elements needed for its plotting method.
-#' @param coordinates GRanges object with coordinates you want to plot.
-#' @param contacts.type Character vector including the path for the bw files.
-#' @param col Colors for plotting virtual 4C data. Defaults to c("grey", "blue", "dark orange").
-#' @param genome Character string indicating the genome for the coordinates. Default: hg19.
-#' @param smooth Arbitrary number for smoothing contact signal. Default: 5.
-#' @param path Path where the datasets are saved.
+#' @inheritParams plotRegulome
+#' @return An object of class \code{contactsRegulome}, which is basically a list with the following
+#'         attributes:
+#'         \itemize{
+#'             \item{\strong{name}: Name of bait for the selected virtual4C data.}
+#'             \item{\strong{col}: Color for plotting virtual4C data, grouping by chicago scores (0=0-3; 3=3-5; 5=>5).}
+#'             \item{\strong{genome}: Genome build.}
+#'             \item{\strong{coordinates}: Selected coordinates to plot as a \code{GRanges} object.}
+#'             \item{\strong{value}: \code{GRanges} object containing all CHiCAGO scores in \code{coordinates}.}
+#'             \item{\strong{moreArgs}: Additional arguments, which are:
+#'                   \itemize{
+#'                       \item{\strong{viewpoint}: Position for the bait, will drow a triangle in this position.}
+#'                       \item{\strong{maxContact}: Maximum CHiCAGO score in coordinates that will be used for
+#'                             scaling SNP data in case it is also plot.}
+#'                       }
+#'                  }
+#'             }
 #' @export
 #' @import GenomicRanges
 create_contactsRegulome <- function(coordinates,
-                                    contacts.type,
-                                    col=c("0"="grey", "3"="blue", "5"="dark orange"),
+                                    contacts_dataset,
+                                    contacts_col=c("0"="grey", "3"="blue", "5"="dark orange"),
                                     genome="hg19",
-                                    smooth=5,
-                                    path="~/data/IsletRegulome/Rdata/") {
+                                    path="~/data/IRB/") {
   ## Load coverage data
-  if (any(contacts.type != "")) {
-    cov <- lapply(contacts.type,
-                  rtracklayer::import,
-                  which=coordinates)
-    cov <- GRangesList(cov)
-    names(cov) <- c("0", "3", "5") # Different ChICAGO scores
+  if (contacts_dataset != "") {
+    load(paste0(path, genome, "/virtual4c/baitID_keyTable.rda"))
+
+    if (is.numeric(contacts_dataset)) {
+      sel <- ids[ids$baitID==contacts_dataset,]
+    } else if (is.character(contacts_dataset)) {
+      sel <- ids[grep(contacts_dataset, ids$baitName),]
+
+      sp <- strsplit(sel$baitName, ";")
+
+      pos <- lapply(sp, grep, pattern=contacts_dataset)
+      logi <- as.logical(sapply(logi, length))
+
+      sel <- sel[which(logi),]
+    }
+
+    load(paste0(path, sel$file))
+
+    virtual4c <- subsetByOverlaps(virtual4c, coordinates)
   } else {
-    cov <- GenomicRanges::GRanges()
-    col <- NULL
+    virtual4c <- GenomicRanges::GRanges()
+    contacts_col <- NULL
+    sel <- data.frame(baitName="",
+                      position=NA)
   }
 
-  ## Smooth coverage
-  idx <- sapply(cov, function(x) length(x)>0)
-  if (length(idx)==0) idx=0
-  cov.smooth <- lapply(cov[idx],
-                       smoothCoverage,
-                       smooth=smooth,
-                       coordinates=coordinates)
-  cov.smooth <- GRangesList(cov.smooth)
-
   ## Get maximum value
-  if (length(cov)>1) max <- max(unlist(lapply(cov.smooth, function(x) max(mcols(x)[,1])))) else max <- 0
-  if(is.infinite(max) | max==0) max <- NULL
-
-  ## Control for ranges with score 0
-  if (sum(cov.smooth$`0`$meanScore)==0) cov.smooth <- GenomicRanges::GRanges()
-
-  ## Load info of coverage
-  load(paste0(path,
-              "shared/baitID_and_name_virtual4C.rda"))
-
-  ## Obtain ID from path
-  id.type <- unlist(strsplit(contacts.type[1], "/"))
-  id.type <- gsub("PI_Merged_Digest_Human_HindIII_BaitID", "", id.type[length(id.type)])
-  id.type <- as.numeric(gsub("_bg0_score.bw", "", id.type))
+  if (length(virtual4c)>1) max <- max(virtual4c$score) else max <- NULL
 
   ## Create snpsRegulome object
-  contacts <- list("name"=ids$baitName[ids$baitID==id.type],
-                   "col"=col,
+  contacts <- list("name"=sel$baitName,
+                   "col"=contacts_col,
                    "genome"=genome,
                    "coordinates"=coordinates,
-                   "value"=cov.smooth,
-                   "moreArgs"=list("smooth"=smooth,
-                                   "viewpoint"=ids$position[ids$baitID==id.type],
+                   "value"=virtual4c,
+                   "moreArgs"=list("viewpoint"=sel$position,
                                    "maxContact"=max))
-  if (length(contacts$name)==0) contacts$name <- ""
   contacts <- structure(contacts, class="contactsRegulome")
 
   return(contacts)
@@ -122,20 +133,27 @@ create_contactsRegulome <- function(coordinates,
 #'
 #' This function loads chromatin maps, obtains the classes present in \code{coordinates} and adds
 #' the needed parameters for plotting.
-#' @param coordinates GRanges object with coordinates you want to plot.
-#' @param maps.type Name of the chromatin maps to plot. The value can be: chromatinClasses, chromatinClassesReduced, chromatinStates, openChromatinClasses, progenitors or "" (default, no map).
-#' @param genome Character string indicating the genome for the coordinates. Default: hg19.
-#' @param path Path where the datasets are saved.
+#' @inheritParams plotRegulome
+#' @return An object of class \code{mapsRegulome}, which is basically a list with the following
+#'         attributes:
+#'         \itemize{
+#'             \item{\strong{name}: Name of selected chromatin map dataset.}
+#'             \item{\strong{col}: Named vector with the color of each type of chromatin class.}
+#'             \item{\strong{genome}: Genome build.}
+#'             \item{\strong{coordinates}: Selected coordinates to plot as a \code{GRanges} object.}
+#'             \item{\strong{value}: \code{GRanges} object containing coordinates and type of chromatin class.}
+#'             \item{\strong{moreArgs}: Additional arguments, which are empty.}
+#'             }
 #' @export
 #' @import GenomicRanges
 create_mapsRegulome <- function(coordinates,
-                                maps.type,
+                                maps_dataset,
                                 genome="hg19",
-                                path="~/data/IsletRegulome/Rdata/") {
+                                path="~/data/IRB/") {
   ## Load Maps data
-  if(maps.type!="") {
-    load(paste0(path,
-                    genome, "/", genome, "_map_", maps.type, ".rda"))
+  if(maps_dataset!="") {
+    load(paste0(path, genome, "/maps/",
+                genome, "_map_", maps_dataset, ".rda"))
   } else {
     map.name=""
     map_col=NULL
@@ -158,42 +176,52 @@ create_mapsRegulome <- function(coordinates,
 #'
 #' This function loads the selected cluster classification, selects the clusters present in \code{coordinates}
 #' and adds the needed parameters for plotting.
-#' @param coordinates GRanges object with coordinates you want to plot.
-#' @param cluster.type Name of the cluster to plot. The value can be: enhancerClusters, enhancerHubs, stretchEnhancers, superEnhancers or "" (no clusters).
-#' @param col Color for plotting clusters. Default: "dark green".
-#' @param genome Character string indicating the genome for the coordinates. Default: hg19.
-#' @param path Path where the datasets are saved.
+#' @inheritParams plotRegulome
+#' @return An object of class \code{clustersRegulome}, which is basically a list with the following
+#'         attributes:
+#'         \itemize{
+#'             \item{\strong{name}: Name of selected enhancer cluster dataset.}
+#'             \item{\strong{col}: Character vector with the color of the enhancer clusters.}
+#'             \item{\strong{genome}: Genome build.}
+#'             \item{\strong{coordinates}: Selected coordinates to plot as a \code{GRanges} object.}
+#'             \item{\strong{value}: \code{GRanges} object containing coordinates for the enhancer clusters and
+#'                 the class of the line that will be drawn.}
+#'             \item{\strong{moreArgs}: Additional arguments, which include:
+#'                 \itemize{
+#'                     \item{\strong{lwd}: Information on the linewidth for each class of enhancer cluster
+#'                         feature.}
+#'                     }
+#'                  }
+#'             }
 #' @export
 #' @import GenomicRanges
 create_clustersRegulome <- function(coordinates,
-                                    cluster.type,
-                                    col="dark green",
+                                    cluster_dataset,
+                                    cluster_col="dark green",
                                     genome="hg19",
-                                    path="~/data/IsletRegulome/Rdata/") {
+                                    path="~/data/IRB/") {
   ## Load Cluster data
-  if(cluster.type!="") {
-    load(paste0(path,
-                    genome, "/", genome, "_cluster_", cluster.type, ".rda"))
+  if(cluster_dataset!="") {
+    load(paste0(path, genome, "/clusters/",
+                genome, "_cluster_", cluster_dataset, ".rda"))
   } else {
     clusters.n=""
     clusters <- GRanges()
   }
 
   ## Select clusters in coordinates
-  clusters.sel <- subsetByOverlaps(clusters, coordinates)
+  clust_sel <- subsetByOverlaps(clusters, coordinates)
 
   ## Adjust start and end to match start and end of coordinates
-  start(ranges(clusters.sel))[start(ranges(clusters.sel)) < start(ranges(coordinates))] <-
-    start(ranges(coordinates))
-  end(ranges(clusters.sel))[end(ranges(clusters.sel)) > end(ranges(coordinates))] <-
-    end(ranges(coordinates))
+  start(clust_sel)[start(clust_sel) < start(coordinates)] <- start(coordinates)
+  end(clust_sel)[end(clust_sel) > end(coordinates)] <- end(coordinates)
 
   ## Create clusterRegulome object
   clusters <- list("name"=clusters.n,
-               "col"=col,
+               "col"=cluster_col,
                "genome"=genome,
                "coordinates"=coordinates,
-               "value"=clusters.sel,
+               "value"=clust_sel,
                "moreArgs"=list("lwd"=c("CDS"=2, # Info for enhancer hubs
                                        "intron"=1,
                                        "exon"=3)))
@@ -206,23 +234,36 @@ create_clustersRegulome <- function(coordinates,
 #'
 #' This function load the TFBS data, selects those binding sites present in \code{coordinates} and
 #' adds the needed parameters for plotting.
-#' @param coordinates GRanges object with coordinates you want to plot.
-#' @param tfs.type Name of the TF dataset to plot. The value can be: adult, progenitors, structure or "" (don't plot TFs).
-#' @param col Color for the tfs circles border.
-#' @param position Position of the center of TFs circle, should be between c(0,1).
-#' @param genome Character string indicating the genome for the coordinates. Default: hg19.
-#' @param path Path where the datasets are saved.
+#' @param position_y Number from 0 (bottom) to 1 (top) indicating the position at which the circles should
+#' be plotted. Default = 0.5.
+#' @inheritParams plotRegulome
+#' @return An object of class \code{tfsRegulome}, which is basically a list with the following
+#'         attributes:
+#'         \itemize{
+#'             \item{\strong{name}: Name of selected transcription factor dataset.}
+#'             \item{\strong{col}: Character vector with the color of the enhancer clusters.}
+#'             \item{\strong{genome}: Genome build.}
+#'             \item{\strong{coordinates}: Selected coordinates to plot as a \code{GRanges} object.}
+#'             \item{\strong{value}: \code{GRanges} object containing coordinates for the transcription factor binding
+#'                 sites and the name of the TF that is binding.}
+#'             \item{\strong{moreArgs}: Additional arguments, which include:
+#'                 \itemize{
+#'                     \item{\strong{positionY}: Information on the linewidth for each class of enhancer cluster
+#'                         feature.}
+#'                     }
+#'                  }
+#'             }
 #' @export
 create_tfsRegulome <- function(coordinates,
-                               tfs.type,
-                               col="dark blue",
-                               position.y=0.5, # from 0 to 1
+                               tfs_dataset,
+                               tfs_col="dark blue",
+                               position_y=0.5, # from 0 to 1
                                genome="hg19",
-                               path="~/data/IsletRegulome/Rdata/") {
+                               path="~/data/IRB/") {
   ## Load TFs data
-  if (tfs.type!="") {
-    load(paste0(path,
-                    genome, "/", genome, "_tfs_", tfs.type, ".rda"))
+  if (tfs_dataset!="") {
+    load(paste0(path, genome, "/tfs/",
+                genome, "_tfs_", tfs_dataset, ".rda"))
   } else {
     tfs.name <- ""
     tfs <- GRanges()
@@ -230,11 +271,11 @@ create_tfsRegulome <- function(coordinates,
 
   ## Create tfsRegulome object
   tfs <- list("name"=tfs.name,
-               "col"=col,
+               "col"=tfs_col,
                "genome"=genome,
                "coordinates"=coordinates,
                "value"=subsetByOverlaps(tfs, coordinates),
-               "moreArgs"=list("position.y"=position.y))
+               "moreArgs"=list("positionY"=position_y))
   tfs <- structure(tfs, class="tfsRegulome")
 
   return(tfs)
@@ -244,55 +285,63 @@ create_tfsRegulome <- function(coordinates,
 #'
 #' This funciton loads all genes in chr, selects those transcripts present in \code{coordinates}
 #' and adds the needed parameters for plotting.
-#' @param coordinates GRanges object with coordinates you want to plot.
-#' @param col Color for the genes.
-#' @param showLongestTranscript When plotting gene data, set to TRUE (default) if you want to reduce the number of transcripts by only plotting the longest transcript per gene. If set to FALSE, will plot all the transcripts.
-#' @param genome Character string indicating the genome for the coordinates. Default: hg19.
-#' @param path Path where the datasets are saved.
+#' @inheritParams plotRegulome
+#' @return An object of class \code{mapsRegulome}, which is basically a list with the following
+#'         attributes:
+#'         \itemize{
+#'             \item{\strong{name}: Gene Annotation.}
+#'             \item{\strong{col}: Named vector with the color of each group of gene annotation, currently
+#'                 "gene", "spec", and "lnc".}
+#'             \item{\strong{genome}: Genome build.}
+#'             \item{\strong{coordinates}: Selected coordinates to plot as a \code{GRanges} object.}
+#'             \item{\strong{value}: \code{GRanges} object containing coordinates for the gene annotations, together
+#'                 with the type of gene annotation (EXON or GENE) and the group..}
+#'             \item{\strong{moreArgs}: Additional arguments, which are empty.}
+#'             }
 #' @export
 #' @import GenomicRanges
 create_genesRegulome <- function(coordinates,
-                                 col=c("gene"="dark grey",
-                                       "spec"="darkorchid3",
-                                       "lnc"="black"),
+                                 genes_col=c("gene"="dark grey",
+                                             "spec"="darkorchid3",
+                                             "lnc"="black"),
                                  showLongestTranscript=TRUE,
                                  genome="hg19",
-                                 path="~/tools/isletregulomebrowser_shiny/static_data/RData/",
-                                 specPath=paste0(path, "shared/specific_genes.rda")) {
+                                 path="~/data/IRB/") {
   ## Load gene and non-coding data
-  load(paste0(path,
-              genome, "/", genome, "_gene_annotation_allNotReduced_ensemblv75_",
+  load(paste0(path, genome, "/genes/",
+              genome, "_gene_annotation_ensemblv75_",
               as.character(seqnames(coordinates)), ".rda"))
-  load(paste0(path,
-                  genome, "/", genome, "_lncRNA.rda"))
-  lncRNA$tx_id <- lncRNA$id
-  mcols(lncRNA) <- mcols(lncRNA)[,c(2,3,4,1)]
+  genes <- subsetByOverlaps(genes, coordinates, ignore.strand=TRUE)
+
+  load(paste0(path, genome, "/genes/",
+              genome, "_lncRNA.rda"))
+  lnc <- subsetByOverlaps(lncRNA, coordinates)
+  lnc$tx_id <- lnc$id
+  mcols(lnc) <- mcols(lnc)[,c(2,3,4,1)]
 
   ## Select genes of interest
-  genes <- subsetByOverlaps(genes, coordinates, ignore.strand=TRUE)
   if (length(genes)>0) genes$group <- "gene"
-  lnc <- subsetByOverlaps(lncRNA, coordinates)
-  if (length(lnc)>0) lnc$group <- "lnc"
+
+  if (length(lnc)>0) {
+    lnc$gene_biotype <- "lncRNA"
+    lnc$longest <- T
+    lnc$group <- "lnc"
+    }
   genes <- c(genes, lnc)
 
-  load(specPath)
+  load(paste0(path, "shared/specific_genes.rda"))
   genes$group[genes$gene_name %in% spec_genes] <- "spec"
 
   ## If showLongestTranscript is TRUE, select longest transcripts for each gene
-  genes.split <- split(genes, genes$gene_name) ## split according to gene name
-  longest <- unique(unlist(lapply(genes.split,
-                                  function(x) x[which(width(x)==max(width(x))),]$tx_id)))
-  genes <- genes[genes$tx_id %in% longest,]
+  if (showLongestTranscript) genes <- genes[genes$longest,]
 
   ## Adjust start and end to match start and end of coordinates
-  start(ranges(genes))[start(ranges(genes)) < start(ranges(coordinates))] <-
-    start(ranges(coordinates))
-  end(ranges(genes))[end(ranges(genes)) > end(ranges(coordinates))] <-
-    end(ranges(coordinates))
+  start(genes)[start(genes) < start(coordinates)] <- start(coordinates)
+  end(genes)[end(genes) > end(coordinates)] <- end(coordinates)
 
   ## Create genesRegulome object
-  genes <- list("name"="geneAnnotation",
-                "col"=col,
+  genes <- list("name"="Gene Annotation",
+                "col"=genes_col,
                 "genome"=genome,
                 "coordinates"=coordinates,
                 "value"=genes,

@@ -4,15 +4,32 @@
 \alias{create_mapsRegulome}
 \title{Create mapsRegulome Object}
 \usage{
-create_mapsRegulome(coordinates, maps.type, genome,
-  path = "~/data/IsletRegulome/Rdata/")
+create_mapsRegulome(coordinates, maps_dataset, genome = "hg19",
+  path = "~/data/IRB/")
 }
 \arguments{
-\item{coordinates}{GRanges object with coordinates you want to plot.}
+\item{coordinates}{Either a GRanges object, data.frame or character string (chr11:17227951-17589050) indicating
+the coordinates for the region the user wants to plot.}
 
-\item{maps.type}{Name of the chromatin maps to plot. The value can be: chromatinClasses, chromatinClassesReduced, chromatinStates, openChromatinClasses, progenitors or "" (default, no map).}
+\item{maps_dataset}{Name of the chromatin maps to plot. The value can be: chromatinClasses,
+chromatinClassesReduced, chromatinStates, openChromatinClasses, progenitors or "" (default, no map).}
 
 \item{genome}{Character string indicating the genome for the coordinates. Default: hg19.}
+
+\item{path}{Path containing the genomes folder (for example "hg19").
+Default: "http://gattaca.imppc.org/genome_browser/lplab/IsletRegulome/Rdata/"}
+}
+\value{
+An object of class \code{mapsRegulome}, which is basically a list with the following
+        attributes:
+        \itemize{
+            \item{\strong{name}: Name of selected chromatin map dataset.}
+            \item{\strong{col}: Named vector with the color of each type of chromatin class.}
+            \item{\strong{genome}: Genome build.}
+            \item{\strong{coordinates}: Selected coordinates to plot as a \code{GRanges} object.}
+            \item{\strong{value}: \code{GRanges} object containing coordinates and type of chromatin class.}
+            \item{\strong{moreArgs}: Additional arguments, which are empty.}
+            }
 }
 \description{
 This function loads chromatin maps, obtains the classes present in \code{coordinates} and adds

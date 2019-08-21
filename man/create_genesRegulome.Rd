@@ -4,18 +4,39 @@
 \alias{create_genesRegulome}
 \title{Create genesRegulome Object}
 \usage{
-create_genesRegulome(coordinates, col = c(gene = "dark grey", lnc = "black"),
-  showLongestTranscript = TRUE, genome,
-  path = "~/data/IsletRegulome/Rdata/")
+create_genesRegulome(coordinates, genes_col = c(gene = "dark grey", spec
+  = "darkorchid3", lnc = "black"), showLongestTranscript = TRUE,
+  genome = "hg19", path = "~/data/IRB/")
 }
 \arguments{
-\item{coordinates}{GRanges object with coordinates you want to plot.}
+\item{coordinates}{Either a GRanges object, data.frame or character string (chr11:17227951-17589050) indicating
+the coordinates for the region the user wants to plot.}
 
-\item{col}{Color for the genes.}
+\item{genes_col}{Named character vector with the colors for each type of feture plotted in the gene
+annotation track.}
 
-\item{showLongestTranscript}{When plotting gene data, set to TRUE (default) if you want to reduce the number of transcripts by only plotting the longest transcript per gene. If set to FALSE, will plot all the transcripts.}
+\item{showLongestTranscript}{When plotting gene data, set to TRUE (default) if you want to reduce the
+number of transcripts by only plotting the longest transcript per gene. If set to FALSE, will plot all
+the transcripts.}
 
 \item{genome}{Character string indicating the genome for the coordinates. Default: hg19.}
+
+\item{path}{Path containing the genomes folder (for example "hg19").
+Default: "http://gattaca.imppc.org/genome_browser/lplab/IsletRegulome/Rdata/"}
+}
+\value{
+An object of class \code{mapsRegulome}, which is basically a list with the following
+        attributes:
+        \itemize{
+            \item{\strong{name}: Gene Annotation.}
+            \item{\strong{col}: Named vector with the color of each group of gene annotation, currently
+                "gene", "spec", and "lnc".}
+            \item{\strong{genome}: Genome build.}
+            \item{\strong{coordinates}: Selected coordinates to plot as a \code{GRanges} object.}
+            \item{\strong{value}: \code{GRanges} object containing coordinates for the gene annotations, together
+                with the type of gene annotation (EXON or GENE) and the group..}
+            \item{\strong{moreArgs}: Additional arguments, which are empty.}
+            }
 }
 \description{
 This funciton loads all genes in chr, selects those transcripts present in \code{coordinates}
