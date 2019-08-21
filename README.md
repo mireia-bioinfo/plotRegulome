@@ -18,8 +18,6 @@ Move to the folder containing the repository, open `R` and use `devtools::instal
 - Bioconductor
     - [GenomicRanges](https://bioconductor.org/packages/release/bioc/html/GenomicRanges.html)
     - [regioneR](https://bioconductor.org/packages/release/bioc/html/regioneR.html)
-    - [rtracklayer](https://bioconductor.org/packages/release/bioc/html/rtracklayer.html)
-    - [ggbio](http://bioconductor.org/packages/release/bioc/html/ggbio.html)
 
 ## Pending to implement  
 1. ~~Implement legend~~
