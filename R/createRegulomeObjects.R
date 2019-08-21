@@ -98,7 +98,7 @@ create_contactsRegulome <- function(coordinates,
       sp <- strsplit(sel$baitName, ";")
 
       pos <- lapply(sp, grep, pattern=contacts_dataset)
-      logi <- as.logical(sapply(logi, length))
+      logi <- as.logical(sapply(pos, length))
 
       sel <- sel[which(logi),]
     }

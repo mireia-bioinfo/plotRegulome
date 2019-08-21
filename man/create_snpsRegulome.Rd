@@ -6,7 +6,7 @@
 \usage{
 create_snpsRegulome(coordinates, snps_dataset = "",
   snps_col = "dark red", genome = "hg19", top = 3,
-  snp_scaling = NULL, path = "~/data/IRB/")
+  snps_scaling = NULL, path = "~/data/IRB/")
 }
 \arguments{
 \item{coordinates}{Either a GRanges object, data.frame or character string (chr11:17227951-17589050) indicating

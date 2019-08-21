@@ -4,7 +4,7 @@
 `plotRegulome` is an R package integrates different types of genomic and epigenomic data into a characteristic type of plot.
 
 ## How to install
-Clone the repositori with `git clone`. 
+Clone the repository with `git clone`. 
 Move to the folder containing the repository, open `R` and use `devtools::install()` to install this package.
 
 ### Needed packages
@@ -20,7 +20,6 @@ Move to the folder containing the repository, open `R` and use `devtools::instal
     - [regioneR](https://bioconductor.org/packages/release/bioc/html/regioneR.html)
 
 ## Pending to implement  
-1. ~~Implement legend~~
 2. Change proportions of plot depending on number of genes (width constant, height variable).
 
 ## Current Bugs
@@ -30,4 +29,3 @@ Move to the folder containing the repository, open `R` and use `devtools::instal
 
 ## Possible improvements
 - Add possibility of plotting several TFs data.
-- Plot one single 4C track.

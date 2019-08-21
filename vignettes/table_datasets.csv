@@ -1,0 +1,16 @@
+Type	Name	Dataset	Reference
+Clusters	COREs	cores	@Gaulton2010
+Clusters	Enhancer Clusters	enhancerClusters	@Pasquali2014
+Clusters	Enhancer Hubs	enhancerHubs	@Miguel-Escalada2019
+Clusters	Stretch Enhancers	stretchEnhancers	@Miguel-Escalada2019
+Clusters	Super Enhancers	superEnhancers	@Parker2013
+Maps	Adult Islets - Chromatin Classes	chromatinClassesReduced	@Miguel-Escalada2019
+Maps	Adult Islets -  Chromatin Classes	openChromatinClasses	@Pasquali2014
+Maps	Adult Islets - Chromatin States	chromatinStates	@Parker2013
+Maps	Pancreatic Progenitors	progenitors	@Cebola2015
+SNPs	70KforT2D	70KforT2D	@Bonas-Guarch2018
+SNPs	Diagram	diagram	@Morris2012
+SNPs	Magic	magic	@Scott2012
+TFs	Adult Islets – Tissue-specific	adult	@Pasquali2014
+TFs	Adult Islets – Structural	structure	@Miguel-Escalada2019
+TFs	Pancreatic Progenitors	progenitors	@Cebola2015

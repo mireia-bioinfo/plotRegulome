@@ -155,5 +155,5 @@ plotRegulome <- function(coordinates,
                                      legend,
                                      ncol=2,
                                      rel_widths = c(0.75,0.25))
-  return(RegulomePlot)
+  return(suppressWarnings(print(RegulomePlot)))
 }

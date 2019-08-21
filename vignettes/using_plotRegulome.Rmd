@@ -1,0 +1,97 @@
+---
+title: "Using plotRegulome"
+author: "Mireia Ramos-Rodríguez"
+output: 
+  BiocStyle::html_document:
+    toc: TRUE
+    number_sections: TRUE
+bibliography: library.bib
+vignette: >
+  %\VignetteIndexEntry{Using plotRegulome}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+```{r setup}
+library(plotRegulome)
+```
+
+# Introduction
+
+
+# Datasets
+
+In order to download all necessary datasets to plot islet data with this package, there is a wrapper function that does it for you. You just need to provide the path where the datasets for the IRB need to be stored.
+
+```{r download-irb, eval=FALSE}
+downloadIRB(output_dir=".") # Download IRB data
+```
+
+You will see that the donwloaded data has the following structure:
+
+```
+IRB_database
+|-- code
+|-- hg19
+|   |-- clusters
+|   |-- genes
+|   |-- maps
+|   |-- snps
+|   |-- tfs
+|   `-- virtual4c
+|       |-- 1
+|       |-- 2
+|       |-- 3
+|       |-- 4
+|       |-- 5
+|       |-- 6
+|       |-- 7
+|       |-- 8
+|       `-- 9
+`-- shared
+
+```
+
+Each folder inside `hg19` contains the datasets related to the type of data.
+
+```{r echo=FALSE}
+dat <- read.delim("table_datasets.csv")
+
+knitr::kable(dat)
+```
+
+
+
+# Plotting
+
+```{r}
+coordinates <- "chr5:50678921-51318155"
+snps_dataset <- "70KforT2D"
+contacts_dataset <- "ISL1"
+maps_dataset <- "chromatinClassesReduced"
+cluster_dataset <- "enhancerClusters"
+tfs_dataset <- "adult"
+path <- "~/data/IRB/"
+
+plotRegulome(coordinates=coordinates,
+             snps_dataset=snps_dataset,
+             contacts_dataset=contacts_dataset,
+             maps_dataset=maps_dataset,
+             cluster_dataset=cluster_dataset,
+             tfs_dataset=tfs_dataset,
+             path=path)
+
+```
+
+
+
+# References
