@@ -71,28 +71,17 @@ plot.snpsRegulome <- function(snpsObject) {
 plot.contactsRegulome <- function(contactsObject) {
   ## Check if GRanges contains elements
   if (length(contactsObject$value)!=0) {
-    ## Add colors as variables
-    len <- sapply(contactsObject$value, length)
-    if (length(len)<3) {
-      len <- len[c("0", "3", "5")]
-      names(len) <- c("0", "3", "5")
-      len[is.na(len)] <- 0
-    }
-
     ## Convert to data.frame
-    contacts.smooth <- lapply(contactsObject$value,
-                              as.data.frame)
-    contacts.smooth <- do.call(rbind, contacts.smooth)
-    contacts.smooth$type <- unlist(mapply(rep, names(contactsObject$col), each=len))
+    contacts <- data.frame(contactsObject$value)
     labs <- c("0"="CHiCAGO score <3",
               "3"="CHiCAGO score 3-5",
               "5"="CHiCAGO score >5")
 
     contactPlot <- list(
       ## Plot rects (histogram-like) coverage -----------
-      ggplot2::geom_rect(data=contacts.smooth,
+      ggplot2::geom_rect(data=contacts,
                 ggplot2::aes(xmin=start, xmax=end,
-                    ymin=0, ymax=meanScore, fill=type)),
+                    ymin=0, ymax=score, fill=group)),
       ## Modify colors ----------------------------------
       ggplot2::scale_fill_manual(values=contactsObject$col,
                                  labels=labs,
@@ -191,7 +180,7 @@ plot.tfsRegulome <- function(tfsObject) {
     points <- tile(tfsObject$coordinates, n=length(tfNames)+1)[[1]]
     points <- end(ranges(points))[-(length(tfNames)+1)]
     points.df <- data.frame("position"=points,
-                            "height"=rep(tfsObject$moreArgs$position.y, length(points)),
+                            "height"=rep(tfsObject$moreArgs$positionY, length(points)),
                             "TF"=tfNames)
 
     ## Add value for circle sizes
