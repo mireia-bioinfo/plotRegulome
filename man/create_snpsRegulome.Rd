@@ -9,19 +9,26 @@ create_snpsRegulome(coordinates, snps_dataset = "",
   snps_scaling = NULL, path = "~/data/IRB/")
 }
 \arguments{
-\item{coordinates}{Either a GRanges object, data.frame or character string (chr11:17227951-17589050) indicating
-the coordinates for the region the user wants to plot.}
+\item{coordinates}{Either a \code{GRanges} object, data.frame or character string
+(i.e. \code{chr11:17227951-17589050}) indicating the coordinates for the region the user wants
+to plot.}
 
-\item{snps_dataset}{GWAS SNPs dataset name to use for the analysis. The value can be: diagram, magic,
-70KforT2D or "".
-(default, no SNPs will be plotted).}
+\item{snps_dataset}{GWAS SNPs dataset name to use for the analysis. The value should be one
+of the defined below (column \emph{Dataset}). Defaults to \code{""}, which will produce an
+empty plot.
+\tabular{lll}{
+\strong{Name}                     \tab \strong{Dataset}        \tab \strong{Reference}  \cr
+70KforT2D                         \tab 70KforT2D               \tab S. Bonàs-Guarch et al. (2018)   \cr
+Diagram                           \tab diagram                 \tab A. P. Morris et al. (2012)         \cr
+Magic                             \tab magic                   \tab R. A. Scott et al. (2012)          \cr
+}}
 
 \item{snps_col}{Color for the GWAS SNPs. Default: "dark red"}
 
 \item{genome}{Character string indicating the genome for the coordinates. Default: hg19.}
 
 \item{path}{Path containing the genomes folder (for example "hg19").
-Default: "http://gattaca.imppc.org/genome_browser/lplab/IsletRegulome/Rdata/"}
+Default: "~/data/IRB/"}
 }
 \value{
 An object of class \code{snpsRegulome}, which is basically a list with the following

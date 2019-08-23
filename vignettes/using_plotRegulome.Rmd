@@ -21,11 +21,39 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(plotRegulome)
-```
 
 # Introduction
+
+The `plotRegulome` package has been developed with the idea of helping users produce and modify the [Islet Regulome Browser](http://isletregulome.com/isletregulome/) plots.
+
+# Quick start
+
+```{r, eval=F}
+library(plotRegulome)
+
+## Download IRB database
+# dir <- "~/data/"
+# path <- downloadIRB(output_dir=dir) # Download IRB data, returns path for database
+
+## Define parameters for plotting
+coordinates <- "chr13:28354157-28550368"#"chr5:50678921-51318155"
+snps_dataset <- "70KforT2D"
+contacts_dataset <- "PDX1"
+maps_dataset <- "chromatinClassesReduced"
+cluster_dataset <- "enhancerClusters"
+tfs_dataset <- "adult"
+dir <- "~/data/IRB/"
+
+## Call ploRegulome function
+plotRegulome(coordinates=coordinates,
+             snps_dataset=snps_dataset,
+             contacts_dataset=contacts_dataset,
+             maps_dataset=maps_dataset,
+             cluster_dataset=cluster_dataset,
+             tfs_dataset=tfs_dataset,
+             path=dir)
+
+```
 
 
 # Datasets
@@ -33,7 +61,9 @@ library(plotRegulome)
 In order to download all necessary datasets to plot islet data with this package, there is a wrapper function that does it for you. You just need to provide the path where the datasets for the IRB need to be stored.
 
 ```{r download-irb, eval=FALSE}
-downloadIRB(output_dir=".") # Download IRB data
+dir <- "~/data/"
+
+downloadIRB(output_dir=dir) # Download IRB data
 ```
 
 You will see that the donwloaded data has the following structure:
@@ -61,22 +91,42 @@ IRB_database
 
 ```
 
-Each folder inside `hg19` contains the datasets related to the type of data.
+Each folder inside `hg19` contains the datasets related to selectable data, summarized in the table below:
 
 ```{r echo=FALSE}
+library(knitr)
+library(kableExtra)
+
 dat <- read.delim("table_datasets.csv")
 
-knitr::kable(dat)
+kable(dat[,-1],
+      caption="Selectable datasets for plotting.") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                font_size = 10) %>%
+  pack_rows("Clusters", 1, 5) %>%
+  pack_rows("Maps", 6, 9) %>%
+  pack_rows("SNPs", 10, 12) %>%
+  pack_rows("TFs", 13, 15)
 ```
 
-
+The name used for appropriatly calling datasets are listed in the column `Dataset` and in the documentation of `plotRegulome`. 
 
 # Plotting
 
 ```{r}
-coordinates <- "chr5:50678921-51318155"
+plotRegulome(randomIRB=T,
+             path=dir)
+```
+
+
+Please check `?plotRegulome` or the __Datasets__ section to see all available datasets and their code names.
+
+```{r, width=12, height=10}
+library(plotRegulome)
+
+coordinates <- "chr13:28354157-28550368"#"chr5:50678921-51318155"
 snps_dataset <- "70KforT2D"
-contacts_dataset <- "ISL1"
+contacts_dataset <- "PDX1"
 maps_dataset <- "chromatinClassesReduced"
 cluster_dataset <- "enhancerClusters"
 tfs_dataset <- "adult"

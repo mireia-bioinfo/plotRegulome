@@ -77,6 +77,10 @@ plot.contactsRegulome <- function(contactsObject) {
               "3"="CHiCAGO score 3-5",
               "5"="CHiCAGO score >5")
 
+    ## Resize to avoid warning message
+    contacts$start[contacts$start < start(contactsObject$coordinates)] <- start(contactsObject$coordinates)
+    contacts$end[contacts$end > end(contactsObject$coordinates)] <- end(contactsObject$coordinates)
+
     contactPlot <- list(
       ## Plot rects (histogram-like) coverage -----------
       ggplot2::geom_rect(data=contacts,
@@ -113,7 +117,7 @@ plot.mapsRegulome <- function(mapsObject) {
     colors <- data.frame(type=names(mapsObject$col),
                          color=mapsObject$col,
                          stringsAsFactors=FALSE)
-    maps.df <- dplyr::left_join(maps.df, colors)
+    maps.df <- dplyr::left_join(maps.df, colors, by="type")
 
     ## Plot maps
     mapsPlot <- list(
@@ -124,15 +128,17 @@ plot.mapsRegulome <- function(mapsObject) {
       ## Add color legend -----------------------
       ggplot2::scale_fill_manual(values=mapsObject$col,
                                  name=gsub("/", "\n", mapsObject$name)),
+
+      ## Blank y axis ----------
+      themeYblank(),
       ## X axis ------------------
       scaleXCoordinates(chr=as.character(seqnames(mapsObject$coordinates)),
                         limits=c(start(mapsObject$coordinates),
-                                 end(mapsObject$coordinates))),
-      ## Blank y axis ----------
-      themeYblank())
+                                 end(mapsObject$coordinates))))
   } else {
-    mapsPlot <- list(emptyPlot(mapsObject$coordinates, 1),
-                     themeYblank())
+    mapsPlot <- emptyPlot(mapsObject$coordinates, 1)
+    mapsPlot[[3]] <- mapsPlot[[2]]
+    mapsPlot[[2]] <- themeYblank()
   }
 
   return(mapsPlot)
@@ -152,15 +158,17 @@ plot.clustersRegulome <- function(clustersObject) {
                                           y=1.05, yend=1.05, lwd=class),
                                       color=clustersObject$col),
                          ggplot2::scale_size_manual(values=clustersObject$moreArgs$lwd),
+
+      ## Blank y axis ----------
+      themeYblank(),
       ## X axis ------------------
       scaleXCoordinates(chr=as.character(seqnames(clustersObject$coordinates)),
                         limits=c(start(clustersObject$coordinates),
-                                 end(clustersObject$coordinates))),
-      ## Blank y axis ----------
-      themeYblank())
+                                 end(clustersObject$coordinates))))
   } else {
-    clustersPlot <- list(emptyPlot(clustersObject$coordinates, 1),
-                         themeYblank())
+    clustersPlot <- emptyPlot(clustersObject$coordinates, 1)
+    clustersPlot[[3]] <- clustersPlot[[2]]
+    clustersPlot[[2]] <- themeYblank()
   }
 
   return(clustersPlot)
@@ -181,7 +189,8 @@ plot.tfsRegulome <- function(tfsObject) {
     points <- end(ranges(points))[-(length(tfNames)+1)]
     points.df <- data.frame("position"=points,
                             "height"=rep(tfsObject$moreArgs$positionY, length(points)),
-                            "TF"=tfNames)
+                            "TF"=tfNames,
+                            stringsAsFactors=F)
 
     ## Add value for circle sizes
     sizes <- seq(27, 29, by=0.5)
@@ -191,7 +200,7 @@ plot.tfsRegulome <- function(tfsObject) {
 
     ## Add midpoint for binding sites
     tfs.df <- data.frame(tfsObject$value)
-    tfs.df <- dplyr::left_join(tfs.df, points.df[,-4])
+    tfs.df <- dplyr::left_join(tfs.df, points.df[,-4], by="TF")
     tfs.df$midpoint <- tfs.df$start + tfs.df$width/2
 
     ## Plot TFs
@@ -219,15 +228,17 @@ plot.tfsRegulome <- function(tfsObject) {
                 size=4),
       ## Label for Y axis name
       ggplot2::ylab(paste0(tfsObject$name)),
+      ## Blank y axis ----------
+      themeYblank(title=T),
       ## X axis ------------------
       scaleXCoordinates(chr=as.character(seqnames(tfsObject$coordinates)),
                         limits=c(start(tfsObject$coordinates),
-                                 end(tfsObject$coordinates))),
-      ## Blank y axis ----------
-      themeYblank(title=T))
+                                 end(tfsObject$coordinates))))
   } else {
-    tfsPlot <- list(emptyPlot(tfsObject$coordinates, 1),
-                    themeYblank())
+    tfsPlot <- emptyPlot(tfsObject$coordinates, 1)
+    tfsPlot[[3]] <- tfsPlot[[2]]
+    tfsPlot[[2]] <- themeYblank()
+
   }
 
   return(tfsPlot)
@@ -242,8 +253,9 @@ plot.genesRegulome <- function(genesObject) {
 
     genes.df <- data.frame(genes.step)
     color <- data.frame(group=names(genesObject$col),
-                        color=genesObject$col)
-    genes.df <- dplyr::left_join(genes.df, color)
+                        color=genesObject$col,
+                        stringsAsFactors=FALSE)
+    genes.df <- dplyr::left_join(genes.df, color, by="group")
 
     distance <- width(genesObject$coordinates)*0.01
     genes.df$modEnd <- genes.df$end + distance
@@ -270,8 +282,10 @@ plot.genesRegulome <- function(genesObject) {
                       ## Blank y axis ----------
                       themeYblank())
   } else {
-    genesPlot <- list(emptyPlot(genesObject$coordinates, 1),
-                      themeYblank())
+    genesPlot <- emptyPlot(genesObject$coordinates, 1)
+    genesPlot[[3]] <- genesPlot[[2]]
+    genesPlot[[2]] <- themeYblank()
+
   }
   return(genesPlot)
 }
@@ -323,9 +337,10 @@ addStepping <- function(genesDat, coordinates) {
   ## Add stepping to data
   dict_stepping <- data.frame("tx_id"=unique(genesDat.ext$tx_id),
                               "stepping"=disjointBins(genesDat.ext[genesDat.ext$type=="GENE"],
-                                                      ignore.strand=TRUE))
+                                                      ignore.strand=TRUE),
+                              stringsAsFactors=F)
   mcols(genesDat) <- dplyr::left_join(data.frame(mcols(genesDat)),
-                                      dict_stepping)
+                                      dict_stepping, by="tx_id")
   return(genesDat)
 }
 
@@ -340,7 +355,7 @@ emptyPlot <- function(coordinates, y) {
                          y=y)
   emptyPlot <- list(ggplot2::geom_point(data=df.empty,
                               ggplot2::aes(x=x, y=y),
-                              color=NA),
+                              color="white"),
                     ggplot2::xlab(""), ggplot2::ylab(""),
                     scaleXCoordinates(chr=as.character(seqnames(coordinates)),
                                       limits=c(start(coordinates),

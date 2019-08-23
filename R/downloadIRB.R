@@ -13,4 +13,6 @@ downloadIRB <- function(output_dir,
 
   untar(tf, exdir=output_dir, verbose=TRUE)
   message("Done writing IRB dataset files to ", output_dir)
+
+  return(invisible(paste0(output_dir, "IRB_database/")))
 }

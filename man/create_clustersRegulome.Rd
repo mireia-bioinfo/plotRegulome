@@ -8,18 +8,28 @@ create_clustersRegulome(coordinates, cluster_dataset,
   cluster_col = "dark green", genome = "hg19", path = "~/data/IRB/")
 }
 \arguments{
-\item{coordinates}{Either a GRanges object, data.frame or character string (chr11:17227951-17589050) indicating
-the coordinates for the region the user wants to plot.}
+\item{coordinates}{Either a \code{GRanges} object, data.frame or character string
+(i.e. \code{chr11:17227951-17589050}) indicating the coordinates for the region the user wants
+to plot.}
 
-\item{cluster_dataset}{Name of the cluster to plot. The value can be: enhancerClusters, enhancerHubs,
-stretchEnhancers, superEnhancers or "" (no clusters).}
+\item{cluster_dataset}{Name of the enhncer cluster data to plot. The value should be one
+of the defined below (column \emph{Dataset}). Defaults to \code{""}, which will produce an
+empty plot.
+\tabular{lll}{
+\strong{Name}                     \tab \strong{Dataset}        \tab \strong{Reference}  \cr
+Enhancer Hubs                     \tab enhancerHubs            \tab Miguel-Escalada et al. (2019)\cr
+Super Enhancers                   \tab superEnhancers          \tab Miguel-Escalada et al. (2019)\cr
+Enhancer Clusters                 \tab enhancerClusters        \tab Pasquali et al. (2014)       \cr
+Stretch Enhancers                 \tab stretchEnhancers        \tab Parker et al. (2013)         \cr
+COREs                             \tab cores                   \tab K. J. Gaulton et al. (2010)        \cr
+}}
 
 \item{cluster_col}{Color for the clusters. Default: "dark green"}
 
 \item{genome}{Character string indicating the genome for the coordinates. Default: hg19.}
 
 \item{path}{Path containing the genomes folder (for example "hg19").
-Default: "http://gattaca.imppc.org/genome_browser/lplab/IsletRegulome/Rdata/"}
+Default: "~/data/IRB/"}
 }
 \value{
 An object of class \code{clustersRegulome}, which is basically a list with the following

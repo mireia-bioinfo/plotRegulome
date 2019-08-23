@@ -9,8 +9,9 @@ create_genesRegulome(coordinates, genes_col = c(gene = "dark grey", spec
   genome = "hg19", path = "~/data/IRB/")
 }
 \arguments{
-\item{coordinates}{Either a GRanges object, data.frame or character string (chr11:17227951-17589050) indicating
-the coordinates for the region the user wants to plot.}
+\item{coordinates}{Either a \code{GRanges} object, data.frame or character string
+(i.e. \code{chr11:17227951-17589050}) indicating the coordinates for the region the user wants
+to plot.}
 
 \item{genes_col}{Named character vector with the colors for each type of feture plotted in the gene
 annotation track.}
@@ -22,7 +23,7 @@ the transcripts.}
 \item{genome}{Character string indicating the genome for the coordinates. Default: hg19.}
 
 \item{path}{Path containing the genomes folder (for example "hg19").
-Default: "http://gattaca.imppc.org/genome_browser/lplab/IsletRegulome/Rdata/"}
+Default: "~/data/IRB/"}
 }
 \value{
 An object of class \code{mapsRegulome}, which is basically a list with the following

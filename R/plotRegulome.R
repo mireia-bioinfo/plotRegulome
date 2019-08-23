@@ -1,29 +1,65 @@
 #' Plot Regulome Data
 #'
-#' @param coordinates Either a GRanges object, data.frame or character string (chr11:17227951-17589050) indicating
-#' the coordinates for the region the user wants to plot.
-#' @param snps_dataset GWAS SNPs dataset name to use for the analysis. The value can be: diagram, magic,
-#' 70KforT2D or "".
-#' (default, no SNPs will be plotted).
+#' By providing the coordinates and IRB datasets of interest, it will produce the characteristic
+#'  Islet Regulome Broser plot.
+#' @param coordinates Either a \code{GRanges} object, data.frame or character string
+#' (i.e. \code{chr11:17227951-17589050}) indicating the coordinates for the region the user wants
+#' to plot.
+#' @param snps_dataset GWAS SNPs dataset name to use for the analysis. The value should be one
+#' of the defined below (column \emph{Dataset}). Defaults to \code{""}, which will produce an
+#' empty plot.
+#' \tabular{lll}{
+#' \strong{Name}                     \tab \strong{Dataset}        \tab \strong{Reference}  \cr
+#' 70KforT2D                         \tab 70KforT2D               \tab S. Bonàs-Guarch et al. (2018)   \cr
+#' Diagram                           \tab diagram                 \tab A. P. Morris et al. (2012)         \cr
+#' Magic                             \tab magic                   \tab R. A. Scott et al. (2012)          \cr
+#' }
 #' @param snps_col Color for the GWAS SNPs. Default: "dark red"
-#' @param contacts_dataset BaitID or bait gene name for the virtual 4C data you want to plot.
-#' @param maps_dataset Name of the chromatin maps to plot. The value can be: chromatinClasses,
-#' chromatinClassesReduced, chromatinStates, openChromatinClasses, progenitors or "" (default, no map).
-#' @param cluster_dataset Name of the cluster to plot. The value can be: enhancerClusters, enhancerHubs,
-#' stretchEnhancers, superEnhancers or "" (no clusters).
+#' @param contacts_dataset BaitID or bait gene name for the virtual 4C data (Miguel-Escalada
+#' et al. (2019)) to plot.
+#' @param maps_dataset Name of the chromatin maps to plot. The value should be one
+#' of the defined below (column \emph{Dataset}). Defaults to \code{""}, which will produce an
+#' empty plot.
+#' \tabular{lll}{
+#' \strong{Name}                     \tab \strong{Dataset}        \tab \strong{Reference}  \cr
+#' Adult Islets - Chromatin Classes  \tab chromatinClassesReduced \tab Miguel-Escalada et al. (2019)\cr
+#' Adult Islets -  Chromatin Classes \tab openChromatinClasses    \tab Pasquali et al. (2014)       \cr
+#' Pancreatic Progenitors            \tab progenitors             \tab Cebola et al. (2015)         \cr
+#' Adult Islets - Chromatin States   \tab chromatinStates         \tab Parker et al. (2013)         \cr
+#' }
+#' @param cluster_dataset Name of the enhncer cluster data to plot. The value should be one
+#' of the defined below (column \emph{Dataset}). Defaults to \code{""}, which will produce an
+#' empty plot.
+#' \tabular{lll}{
+#' \strong{Name}                     \tab \strong{Dataset}        \tab \strong{Reference}  \cr
+#' Enhancer Hubs                     \tab enhancerHubs            \tab Miguel-Escalada et al. (2019)\cr
+#' Super Enhancers                   \tab superEnhancers          \tab Miguel-Escalada et al. (2019)\cr
+#' Enhancer Clusters                 \tab enhancerClusters        \tab Pasquali et al. (2014)       \cr
+#' Stretch Enhancers                 \tab stretchEnhancers        \tab Parker et al. (2013)         \cr
+#' COREs                             \tab cores                   \tab K. J. Gaulton et al. (2010)        \cr
+#' }
 #' @param cluster_col Color for the clusters. Default: "dark green"
-#' @param tfs_dataset Name of the TF dataset to plot. The value can be: adult, progenitors, structure or ""
-#' (don't plot TFs).
-#' @param tfs_col Color for the tfs circles border.
+#' @param tfs_dataset Name of the TF dataset to plot. The value should be one
+#' of the defined below (column \emph{Dataset}). Defaults to \code{""}, which will produce an
+#' empty plot.
+#' \tabular{lll}{
+#' \strong{Name}                     \tab \strong{Dataset}        \tab \strong{Reference}  \cr
+#' Adult Islets – Structural         \tab structure               \tab Miguel-Escalada et al. (2019)\cr
+#' Pancreatic Progenitors            \tab progenitors             \tab Cebola et al. (2015)         \cr
+#' Adult Islets – Tissue-specific    \tab adult                   \tab Pasquali et al. (2014)
+#' }
+#' @param tfs_col Color for the TFs circle border.
 #' @param genes_col Named character vector with the colors for each type of feture plotted in the gene
 #' annotation track.
 #' @param showLongestTranscript When plotting gene data, set to TRUE (default) if you want to reduce the
 #' number of transcripts by only plotting the longest transcript per gene. If set to FALSE, will plot all
 #' the transcripts.
+#' @param randomIRB Generate random combinations of IRB datasets.
 #' @param genome Character string indicating the genome for the coordinates. Default: hg19.
 #' @param path Path containing the genomes folder (for example "hg19").
-#' Default: "http://gattaca.imppc.org/genome_browser/lplab/IsletRegulome/Rdata/"
-#' @return A ggplot2 object that can be plotted or saved with ggsave.
+#' Default: "~/data/IRB/"
+#' @return A ggplot2 object that can be plotted or saved with ggsave. Recomended device size in
+#' inches is: \code{width=??, height=??}
 #' @export
 #' @import GenomicRanges
 
@@ -48,8 +84,18 @@ plotRegulome <- function(coordinates,
                                      "lnc"="black"),
                          showLongestTranscript=TRUE,
                          # General -------
+                         randomIRB=FALSE,
                          genome="hg19",
                          path="~/data/IRB/") {
+
+  if (randomIRB) {
+    rnd <- generateRandomIRB()
+    coordinates <- rnd$coordinates
+    snps_dataset <- rnd$snps
+    maps_dataset <- rnd$maps
+    cluster_dataset <- rnd$clusters
+    tfs_dataset <- rnd$tfs
+  }
 
   if (class(coordinates)=="GRanges") {
     coordinates <- coordinates
@@ -100,10 +146,16 @@ plotRegulome <- function(coordinates,
 
   #### Full plot ---------------------------
   ## SNPs & contacts -----------------------
+  plotSNPS <- plot(snpsObject)
+  plotContacts <- plot(contactsObject)
+
   p1 <-
       ggplot2::ggplot() +
-        plot(snpsObject) +
-        plot(contactsObject)
+        plotSNPS[-length(plotSNPS)] +
+        plot(contactsObject)[-length(plotContacts)] +
+        scaleXCoordinates(chr=as.character(seqnames(snpsObject$coordinates)),
+                                   limits=c(start(coordinates),
+                                            end(coordinates)))
 
 
   if (length(snpsObject$value)>0 &
@@ -114,14 +166,18 @@ plotRegulome <- function(coordinates,
   }
 
   ## Maps & TFs -----------------------
+  plotMaps <- plot(mapsObject)
+  plotClusters <- plot(clustersObject)
+  plotTFS <- plot(tfsObject)
+
   p2 <-
     ggplot2::ggplot() +
-      plot(mapsObject) +
+      plotMaps[-length(plotMaps)] +
       ggplot2::geom_rect(ggplot2::aes(xmin=start(ranges(coordinates)),
                     xmax=end(ranges(coordinates)),
                     ymin=0.85, ymax=1), color="black", fill=NA) +
-      plot(clustersObject) +
-      plot(tfsObject) +
+      plotClusters[-length(plotClusters)] +
+      plotTFS[-length(plotTFS)] +
       ggplot2::ylim(0.25,1.1)
 
   ## Genes -----------------------
@@ -155,5 +211,5 @@ plotRegulome <- function(coordinates,
                                      legend,
                                      ncol=2,
                                      rel_widths = c(0.75,0.25))
-  return(suppressWarnings(print(RegulomePlot)))
+  return(RegulomePlot)
 }

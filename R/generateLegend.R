@@ -39,6 +39,9 @@ generateLegendGG <- function(contactsObject,
                     "color"=c(clustersObject$col,
                               tfsObject$col))
   df3 <- df3[df3$class!="",]
+  df3 <- rbind(df3, df3)
+  df3$x <- 1:4
+  df3$y <- 1:4
 
   ## Manually create legends
   contactLegend <- list(ggplot2::geom_point(data=df1,
@@ -62,12 +65,12 @@ generateLegendGG <- function(contactsObject,
                                                       color=class)),
                       ggplot2::scale_size_manual(values=c(2,1),
                                                    name="Other"),
-                      ggplot2::scale_color_manual(values=as.character(df3$color),
+                      ggplot2::scale_color_manual(values=unique(as.character(df3$color)),
                                                   name="Other"))
 
   legends <- list(ggplot2::ggplot() + contactLegend,
                   ggplot2::ggplot() + otherLegend)
-  dfs <- list(df1, df3)
+  dfs <- list(df1, df3[1:2,])
   idx <- sapply(dfs, nrow)
   idx <- idx>0
   legends <- legends[idx]
