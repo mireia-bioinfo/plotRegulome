@@ -1,10 +1,10 @@
 Package: plotRegulome
-Title: Plot Regulome
-Version: 0.0.0.9000
+Title: Plot Islet Regulome data
+Version: 1.0.0.9000
 Authors@R: person("Mireia", "Ramos-Rodriguez", email = "mramos@igtp.cat", role = c("aut", "cre"))
-Description: This package allows you to plot different types of genomic data (SNPs, TFBS, chromatin classes) in a single plot.
+Description: The plotRegulome package allows the download and plotting of Islet Regulome data available at isletregulome.com.
 Depends: R (>= 3.4.2)
-License: What license is it under?
+License: Artistic-2.0
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
@@ -19,5 +19,6 @@ Imports:
     Hmisc
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    kableExtra
 VignetteBuilder: knitr

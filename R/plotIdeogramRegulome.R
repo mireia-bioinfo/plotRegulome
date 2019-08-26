@@ -7,7 +7,6 @@
 
 plotIdeogramRegulome <- function(coordinates,
                                  genome) {
-  # load("data/ideoCyto.rda")
   hg19 <- ideoCyto$hg19
 
   dat <- hg19[as.character(seqnames(hg19)) %in% as.character(seqnames(coordinates))]

@@ -16,6 +16,9 @@ to plot.}
 \item{contacts_dataset}{BaitID or bait gene name for the virtual 4C data (Miguel-Escalada
 et al. (2019)) to plot.}
 
+\item{contacts_col}{Named vector ("0", "3" and "5"), with the colors for each group of CHiCAGO
+contacts.}
+
 \item{genome}{Character string indicating the genome for the coordinates. Default: hg19.}
 
 \item{path}{Path containing the genomes folder (for example "hg19").

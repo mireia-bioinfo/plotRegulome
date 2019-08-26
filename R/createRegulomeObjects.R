@@ -32,9 +32,17 @@ create_snpsRegulome <- function(coordinates,
                                 path="~/data/IRB/") {
   ## Load SNPs data
   if (snps_dataset!="") {
-    load(paste0(path,
-                genome, "/snps/", genome, "_snps_", snps_dataset, "_",
-                as.character(seqnames(coordinates)), ".rda"))
+    file <- paste0(path,
+                   genome, "/snps/", genome, "_snps_", snps_dataset, "_",
+                   as.character(seqnames(coordinates)), ".rda")
+    if (file.exists(file)) {
+      load(file)
+    } else {
+      stop("Can't find file in ", file,
+           ". Please check if path is correctly defined and if your dataset is listed among: ",
+           paste0(c(IRB$snps, '""'), collapse=", "),
+           ".\nCheck ?plotRegulome for more informtion on available datasets.")
+    }
   } else {
     snps <- GRanges() # create empty GRanges if no SNPs to plot
   }
@@ -152,8 +160,17 @@ create_mapsRegulome <- function(coordinates,
                                 path="~/data/IRB/") {
   ## Load Maps data
   if(maps_dataset!="") {
-    load(paste0(path, genome, "/maps/",
-                genome, "_map_", maps_dataset, ".rda"))
+    file <- paste0(path, genome, "/maps/",
+                genome, "_map_", maps_dataset, ".rda")
+
+    if (file.exists(file)) {
+      load(file)
+    } else {
+      stop("Can't find file in ", file,
+           ". Please check if path is correctly defined and if your dataset is listed among: ",
+           paste0(c(IRB$maps, '""'), collapse=", "),
+           ".\nCheck ?plotRegulome for more informtion on available datasets.")
+    }
   } else {
     map.name=""
     map_col=NULL
@@ -202,8 +219,17 @@ create_clustersRegulome <- function(coordinates,
                                     path="~/data/IRB/") {
   ## Load Cluster data
   if(cluster_dataset!="") {
-    load(paste0(path, genome, "/clusters/",
-                genome, "_cluster_", cluster_dataset, ".rda"))
+    file <- paste0(path, genome, "/clusters/",
+                   genome, "_cluster_", cluster_dataset, ".rda")
+
+    if (file.exists(file)) {
+      load(file)
+    } else {
+      stop("Can't find file in ", file,
+           ". Please check if path is correctly defined and if your dataset is listed among: ",
+           paste0(c(IRB$clusters, '""'), collapse=", "),
+           ".\nCheck ?plotRegulome for more informtion on available datasets.")
+    }
   } else {
     clusters.n=""
     clusters <- GRanges()
@@ -262,8 +288,17 @@ create_tfsRegulome <- function(coordinates,
                                path="~/data/IRB/") {
   ## Load TFs data
   if (tfs_dataset!="") {
-    load(paste0(path, genome, "/tfs/",
-                genome, "_tfs_", tfs_dataset, ".rda"))
+    file <- paste0(path, genome, "/tfs/",
+                genome, "_tfs_", tfs_dataset, ".rda")
+
+    if (file.exists(file)) {
+      load(file)
+    } else {
+      stop("Can't find file in ", file,
+           ". Please check if path is correctly defined and if your dataset is listed among: ",
+           paste0(c(IRB$tfs, '""'), collapse=", "),
+           ".\nCheck ?plotRegulome for more informtion on available datasets.")
+    }
   } else {
     tfs.name <- ""
     tfs <- GRanges()

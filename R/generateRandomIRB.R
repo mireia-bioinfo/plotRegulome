@@ -2,11 +2,11 @@
 generateRandomIRB <- function() {
   randomIRB <- list()
 
-  width <- floor(runif(1, 100, 5e5)) # randomly select region width
+  width <- floor(runif(1, 1e3, 5e5)) # randomly select region width
 
   # Randomize coordinates to show
-  coordinates <- GRanges(paste0("chr1:1-", width))
-  coordinates <- regioneR::randomizeRegions(coordinates, mask=T)
+  coordinates <- GenomicRanges::GRanges(paste0("chr1:1-", width))
+  coordinates <- suppressWarnings(suppressMessages(regioneR::randomizeRegions(coordinates, mask=T)))
   randomIRB[["coordinates"]] <- coordinates
 
   # Randomize datasets

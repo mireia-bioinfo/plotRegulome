@@ -13,12 +13,12 @@ create_genesRegulome(coordinates, genes_col = c(gene = "dark grey", spec
 (i.e. \code{chr11:17227951-17589050}) indicating the coordinates for the region the user wants
 to plot.}
 
-\item{genes_col}{Named character vector with the colors for each type of feture plotted in the gene
+\item{genes_col}{Named character vector ("gene", "lnc" and "spec") with the colors for each type of feture plotted in the gene
 annotation track.}
 
 \item{showLongestTranscript}{When plotting gene data, set to TRUE (default) if you want to reduce the
 number of transcripts by only plotting the longest transcript per gene. If set to FALSE, will plot all
-the transcripts.}
+available transcripts.}
 
 \item{genome}{Character string indicating the genome for the coordinates. Default: hg19.}
 

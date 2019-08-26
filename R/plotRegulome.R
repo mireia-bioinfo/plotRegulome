@@ -17,6 +17,8 @@
 #' @param snps_col Color for the GWAS SNPs. Default: "dark red"
 #' @param contacts_dataset BaitID or bait gene name for the virtual 4C data (Miguel-Escalada
 #' et al. (2019)) to plot.
+#' @param contacts_col Named vector ("0", "3" and "5"), with the colors for each group of CHiCAGO
+#' contacts.
 #' @param maps_dataset Name of the chromatin maps to plot. The value should be one
 #' of the defined below (column \emph{Dataset}). Defaults to \code{""}, which will produce an
 #' empty plot.
@@ -49,17 +51,17 @@
 #' Adult Islets – Tissue-specific    \tab adult                   \tab Pasquali et al. (2014)
 #' }
 #' @param tfs_col Color for the TFs circle border.
-#' @param genes_col Named character vector with the colors for each type of feture plotted in the gene
+#' @param genes_col Named character vector ("gene", "lnc" and "spec") with the colors for each type of feture plotted in the gene
 #' annotation track.
 #' @param showLongestTranscript When plotting gene data, set to TRUE (default) if you want to reduce the
 #' number of transcripts by only plotting the longest transcript per gene. If set to FALSE, will plot all
-#' the transcripts.
+#' available transcripts.
 #' @param randomIRB Generate random combinations of IRB datasets.
 #' @param genome Character string indicating the genome for the coordinates. Default: hg19.
 #' @param path Path containing the genomes folder (for example "hg19").
 #' Default: "~/data/IRB/"
 #' @return A ggplot2 object that can be plotted or saved with ggsave. Recomended device size in
-#' inches is: \code{width=??, height=??}
+#' inches is: \code{width=11, height=6}
 #' @export
 #' @import GenomicRanges
 
@@ -140,6 +142,7 @@ plotRegulome <- function(coordinates,
                                   path=path)
 
   genesObject <- create_genesRegulome(coordinates=coordinates,
+                                      genes_col = genes_col,
                                       showLongestTranscript=TRUE,
                                       genome="hg19",
                                       path=path)
@@ -152,7 +155,7 @@ plotRegulome <- function(coordinates,
   p1 <-
       ggplot2::ggplot() +
         plotSNPS[-length(plotSNPS)] +
-        plot(contactsObject)[-length(plotContacts)] +
+        plotContacts[-length(plotContacts)] +
         scaleXCoordinates(chr=as.character(seqnames(snpsObject$coordinates)),
                                    limits=c(start(coordinates),
                                             end(coordinates)))
@@ -163,6 +166,9 @@ plotRegulome <- function(coordinates,
     scale <- max(-log10(snpsObject$value$PVAL), na.rm=T)/contactsObject$moreArgs$maxContact
     p1 <- p1 + ggplot2::scale_y_continuous(sec.axis = ggplot2::sec_axis(~.*scale,
                                                                         name=expression("SNPs "*-log[10]*" P-value")))
+  } else if (length(snpsObject$value)>0 &
+             length(contactsObject$value)==0) {
+    p1 <- p1 + ggplot2::scale_y_continuous(name=expression("SNPs "*-log[10]*" P-value"))
   }
 
   ## Maps & TFs -----------------------
@@ -178,7 +184,8 @@ plotRegulome <- function(coordinates,
                     ymin=0.85, ymax=1), color="black", fill=NA) +
       plotClusters[-length(plotClusters)] +
       plotTFS[-length(plotTFS)] +
-      ggplot2::ylim(0.25,1.1)
+      ggplot2::ylim(0.25,1.1) +
+      ggplot2::ylab(tfsObject$name)
 
   ## Genes -----------------------
   p3 <-
@@ -212,4 +219,8 @@ plotRegulome <- function(coordinates,
                                      ncol=2,
                                      rel_widths = c(0.75,0.25))
   return(RegulomePlot)
+}
+
+ggsave <- function(...) {
+  ggplot2::ggsave(...)
 }

@@ -32,6 +32,9 @@ Magic                             \tab magic                   \tab R. A. Scott 
 \item{contacts_dataset}{BaitID or bait gene name for the virtual 4C data (Miguel-Escalada
 et al. (2019)) to plot.}
 
+\item{contacts_col}{Named vector ("0", "3" and "5"), with the colors for each group of CHiCAGO
+contacts.}
+
 \item{maps_dataset}{Name of the chromatin maps to plot. The value should be one
 of the defined below (column \emph{Dataset}). Defaults to \code{""}, which will produce an
 empty plot.
@@ -69,12 +72,12 @@ Adult Islets – Tissue-specific    \tab adult                   \tab Pasquali e
 
 \item{tfs_col}{Color for the TFs circle border.}
 
-\item{genes_col}{Named character vector with the colors for each type of feture plotted in the gene
+\item{genes_col}{Named character vector ("gene", "lnc" and "spec") with the colors for each type of feture plotted in the gene
 annotation track.}
 
 \item{showLongestTranscript}{When plotting gene data, set to TRUE (default) if you want to reduce the
 number of transcripts by only plotting the longest transcript per gene. If set to FALSE, will plot all
-the transcripts.}
+available transcripts.}
 
 \item{randomIRB}{Generate random combinations of IRB datasets.}
 
@@ -85,7 +88,7 @@ Default: "~/data/IRB/"}
 }
 \value{
 A ggplot2 object that can be plotted or saved with ggsave. Recomended device size in
-inches is: \code{width=??, height=??}
+inches is: \code{width=11, height=6}
 }
 \description{
 By providing the coordinates and IRB datasets of interest, it will produce the characteristic

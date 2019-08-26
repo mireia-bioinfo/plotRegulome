@@ -113,6 +113,10 @@ plot.mapsRegulome <- function(mapsObject) {
     mapsObject$value$type <- as.character(mapsObject$value$type)
     maps.df <- data.frame(mapsObject$value)
 
+    ## Change start ends to avoid ggplot2 warning
+    maps.df$start[maps.df$start < start(mapsObject$coordinates)] <- start(mapsObject$coordinates)
+    maps.df$end[maps.df$end > end(mapsObject$coordinates)] <- end(mapsObject$coordinates)
+
     ## Add colors to data
     colors <- data.frame(type=names(mapsObject$col),
                          color=mapsObject$col,
@@ -200,6 +204,9 @@ plot.tfsRegulome <- function(tfsObject) {
 
     ## Add midpoint for binding sites
     tfs.df <- data.frame(tfsObject$value)
+    tfs.df$start[tfs.df$start < start(tfsObject$coordinates)] <- start(tfsObject$coordinates)
+    tfs.df$end[tfs.df$end > end(tfsObject$coordinates)] <- end(tfsObject$coordinates)
+
     tfs.df <- dplyr::left_join(tfs.df, points.df[,-4], by="TF")
     tfs.df$midpoint <- tfs.df$start + tfs.df$width/2
 
