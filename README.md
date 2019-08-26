@@ -5,7 +5,7 @@
 ## Description
 `plotRegulome` is an R package that integrates different types of genomic and epigenomic data into the Islet Regulome Browser characteristic plot.
 
-For a detailed description of all plot elements you can visit [isletregulome.com](isletregulome.com) and go to Info > Description of the plot.
+For a detailed description of all plot elements you can visit [isletregulome.com](isletregulome.com) and go to Info > Description of the plot or read the package vignette (see below).
 
 ## How to install
 Clone the repository with `git clone`. 
