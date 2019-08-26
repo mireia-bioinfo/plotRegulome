@@ -1,4 +1,4 @@
 Type	Name	Dataset	Reference
 Genes	Gene annotation	gene_annotation_ensemblv75	@Zerbino2018
 Genes	RNA-seq	gene_moran	@Moran2012
-Genes	lncRNA	lncRNA	@Moran2012
+Genes	lncRNA	lncRNA	@Akerman2017
