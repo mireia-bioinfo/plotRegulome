@@ -87,6 +87,15 @@ coordinates <- GRanges("chr5:50678921-51318155") #GRanges("chr13:28444157-285503
 snps_dataset <- "70KforT2D"
 contacts_dataset <- 570519 #183446
 maps_dataset <- "chromatinClassesReduced"
-cluster_dataset <- "enhancerClusters"
-tfs_dataset <- "adult"
+cluster_dataset <- ""
+tfs_dataset <- ""
 path <- "~/data/IRB/"
+
+
+plotRegulome(coordinates=coordinates,
+             snps_dataset=snps_dataset,
+             contacts_dataset=contacts_dataset,#iles.contacts,
+             maps_dataset=maps_dataset,
+             cluster_dataset=cluster_dataset,
+             tfs_dataset=tfs_dataset,
+             path=path)

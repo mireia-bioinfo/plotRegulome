@@ -32,16 +32,21 @@ generateLegendGG <- function(contactsObject,
   ## Other Object
   if (tfsObject$name!="") tfs.name="TF binding" else tfs.name=""
 
-  df3 <- data.frame("x"=1:2,
-                    "y"=1:2,
+  df3 <- data.frame(x=1:2,
+                    y=1:2,
                     "class"=c(clustersObject$name,
                               tfs.name),
                     "color"=c(clustersObject$col,
                               tfsObject$col))
   df3 <- df3[df3$class!="",]
-  df3 <- rbind(df3, df3)
-  df3$x <- 1:4
-  df3$y <- 1:4
+
+  df3.plot <- rbind(df3, df3)
+
+  if (nrow(df3.plot)>0) {
+    df3.plot$x <- seq(1, nrow(df3.plot))
+    df3.plot$y <- seq(1, nrow(df3.plot))
+  }
+
 
   ## Manually create legends
   contactLegend <- list(ggplot2::geom_point(data=df1,
@@ -60,8 +65,10 @@ generateLegendGG <- function(contactsObject,
                                                                "5"="CHiCAGO score >5",
                                                                "Viewpoint"=bquote('Viewpoint ('~italic(.(contactsObject$name))~")"))))
 
-  otherLegend <- list(ggplot2::geom_line(data=df3,
-                                         ggplot2::aes(x, y, size=class,
+  otherLegend <- list(ggplot2::geom_line(data=df3.plot,
+                                         ggplot2::aes(x,
+                                                      y,
+                                                      size=class,
                                                       color=class)),
                       ggplot2::scale_size_manual(values=c(2,1),
                                                    name="Other"),
@@ -70,7 +77,7 @@ generateLegendGG <- function(contactsObject,
 
   legends <- list(ggplot2::ggplot() + contactLegend,
                   ggplot2::ggplot() + otherLegend)
-  dfs <- list(df1, df3[1:2,])
+  dfs <- list(df1, df3)
   idx <- sapply(dfs, nrow)
   idx <- idx>0
   legends <- legends[idx]

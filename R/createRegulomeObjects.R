@@ -98,9 +98,9 @@ create_contactsRegulome <- function(coordinates,
   if (contacts_dataset != "") {
     load(paste0(path, genome, "/virtual4c/baitID_keyTable.rda"))
 
-    if (is.numeric(contacts_dataset)) {
+    if (contacts_dataset %in% ids$baitID) {
       sel <- ids[ids$baitID==contacts_dataset,]
-    } else if (is.character(contacts_dataset)) {
+    } else if (any(grepl(contacts_dataset, ids$baitName))) {
       sel <- ids[grep(contacts_dataset, ids$baitName),]
 
       sp <- strsplit(sel$baitName, ";")
