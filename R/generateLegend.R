@@ -104,11 +104,11 @@ generateLegendGG <- function(contactsObject,
     legendIndex <- as.logical(sapply(lapply(grobs,
                                  function(x) which(sapply(x, function(x) x$name) == "guide-box")),
                           length))
-
+    ## Extract legends
     leg.all <- lapply(leg.plot[legendIndex],
                       function(x) cowplot::get_legend(x + theme_legend))
 
-
+    ## Plot legends
     legend <- cowplot::plot_grid(plotlist=leg.all,
                                  ncol=1,
                                  align="v")
