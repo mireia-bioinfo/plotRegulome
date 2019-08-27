@@ -20,5 +20,6 @@ Imports:
 Suggests: 
     knitr,
     rmarkdown,
-    kableExtra
-VignetteBuilder: knitr
+    kableExtra,
+    R.rsp
+VignetteBuilder: R.rsp

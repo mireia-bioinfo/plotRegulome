@@ -5,11 +5,12 @@ output:
   BiocStyle::html_document:
     toc: TRUE
     number_sections: TRUE
+    self_contained: TRUE
 bibliography: library.bib
-vignette: >
-  %\VignetteIndexEntry{Using plotRegulome}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+<!-- vignette: | -->
+<!--   %\VignetteIndexEntry{Using plotRegulome} -->
+<!--   %\VignetteEngine{knitr::rmarkdown} -->
+<!--   %\VignetteEncoding{UTF-8} -->
 ---
 
 ```{r, include = FALSE}
