@@ -98,7 +98,14 @@ generateLegendGG <- function(contactsObject,
                                    legend.key	= ggplot2::element_rect(fill=NA),
                                    legend.key.size=ggplot2::unit(12,"pt"),
                                    legend.box="vertical")
-    leg.all <- lapply(leg.plot,
+
+    ## Check if a plot has no legend
+    grobs <- lapply(leg.plot, function(x) cowplot::plot_to_gtable(x)$grobs)
+    legendIndex <- as.logical(sapply(lapply(grobs,
+                                 function(x) which(sapply(x, function(x) x$name) == "guide-box")),
+                          length))
+
+    leg.all <- lapply(leg.plot[legendIndex],
                       function(x) cowplot::get_legend(x + theme_legend))
 
 

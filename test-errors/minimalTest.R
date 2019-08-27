@@ -83,10 +83,10 @@ genome="hg19"
 path="~/data/IRB/"
 
 
-coordinates <- GRanges("chr5:50678921-51318155") #GRanges("chr13:28444157-28550368")
+coordinates <- "chr5:131817301-131826490"#GRanges("chr5:50678921-51318155") #GRanges("chr13:28444157-28550368")
 snps_dataset <- "70KforT2D"
 contacts_dataset <- 570519 #183446
-maps_dataset <- "chromatinClassesReduced"
+maps_dataset <- "progenitors"
 cluster_dataset <- ""
 tfs_dataset <- ""
 path <- "~/data/IRB/"
