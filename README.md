@@ -8,11 +8,25 @@
 For a detailed description of all plot elements you can visit [isletregulome.com](isletregulome.com) and go to Info > Description of the plot or read the package vignette (see below).
 
 ## How to install
-Clone the repository with `git clone`. 
-Move to the folder containing the repository, open `R` and use `devtools` to install this package.
+
+To install the __current version__:
 
 ```
-devtools::install(build_vignettes=TRUE)
+devtools::install_github("mireia-bioinfo/plotRegulome", 
+                         build_opts = c("--no-resave-data", 
+                                        "--no-manual"),
+                         build_vignettes = TRUE)
+```
+
+
+To install the __development version__:
+
+```
+devtools::install_github("mireia-bioinfo/plotRegulome", 
+                         ref="devel",
+                         build_opts = c("--no-resave-data", 
+                                        "--no-manual"),
+                         build_vignettes = TRUE)
 ```
 
 ### Required packages
