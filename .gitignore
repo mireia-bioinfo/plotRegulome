@@ -2,4 +2,4 @@
 *.Rhistory
 data-raw
 Meta
-doc
+doc/
