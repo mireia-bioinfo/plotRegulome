@@ -7,10 +7,6 @@ output:
     number_sections: TRUE
     self_contained: TRUE
 bibliography: library.bib
-<!-- vignette: | -->
-<!--   %\VignetteIndexEntry{Using plotRegulome} -->
-<!--   %\VignetteEngine{knitr::rmarkdown} -->
-<!--   %\VignetteEncoding{UTF-8} -->
 ---
 
 ```{r, include = FALSE}
@@ -51,7 +47,7 @@ plotRegulome(coordinates=coordinates,
              maps_dataset=maps_dataset,
              cluster_dataset=cluster_dataset,
              tfs_dataset=tfs_dataset,
-             path="~/data/IRB/")
+             path="~/data/IRB_database/")
 ```
 
 
@@ -148,7 +144,7 @@ plotRegulome(coordinates=coordinates,
              maps_dataset=maps_dataset,
              cluster_dataset=cluster_dataset,
              tfs_dataset=tfs_dataset,
-             path="~/data/IRB/")
+             path="~/data/IRB_database/")
 ```
 
 You can save the Islet Regulome plots using the `ggsave` function from the `ggplot2` package.
@@ -181,7 +177,7 @@ plotRegulome(coordinates=coordinates,
              tfs_dataset=tfs_dataset,
              tfs_col="violetred4",
              genes_col=c("gene"="thistle3", "lnc"="orangered3", "spec"="yellow3"),
-             path="~/data/IRB/")
+             path="~/data/IRB_database/")
 ```
 
 ## Random Islet Regulome plot generator
@@ -194,7 +190,7 @@ Any specifications on datasets will be overwritten when `randomIRB=TRUE`. Howeve
 set.seed(2384982)
   
 plotRegulome(randomIRB=T,
-             path="~/data/IRB/")
+             path="~/data/IRB_database/")
 ```
 
 # Plot description
