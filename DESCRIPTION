@@ -16,7 +16,9 @@ Imports:
     dplyr,
     cowplot,
     ggplot2,
-    Hmisc
+    Hmisc,
+    IRanges,
+    S4Vectors
 Suggests: 
     knitr,
     rmarkdown,
