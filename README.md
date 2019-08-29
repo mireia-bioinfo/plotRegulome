@@ -1,9 +1,8 @@
 # plotRegulome
 <!-- badges: start -->
-  [![Travis build status](https://travis-ci.org/mireia-bioinfo/plotRegulome.svg?branch=devel)](https://travis-ci.org/mireia-bioinfo/plotRegulome)
-  <!-- badges: end -->
-
-
+  [![Travis build status master](https://travis-ci.org/mireia-bioinfo/plotRegulome.svg?branch=master)](https://travis-ci.org/mireia-bioinfo/plotRegulome)
+  [![Travis build status devel](https://travis-ci.org/mireia-bioinfo/plotRegulome.svg?branch=devel)](https://travis-ci.org/mireia-bioinfo/plotRegulome)
+<!-- badges: end -->
 
 ![](http://isletregulome.com/isletregulome/favicon.png)
 
