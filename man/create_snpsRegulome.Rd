@@ -27,6 +27,12 @@ Magic                             \tab magic                   \tab R. A. Scott 
 
 \item{genome}{Character string indicating the genome for the coordinates. Default: hg19.}
 
+\item{top}{Number indicating how many of the most significant SNPs in the region will be shown
+as labels.}
+
+\item{snps_scaling}{Number indicating the value to which scale the maximum -log10 PVAL for SNPs.
+Defaults to NULL, meaning that no scaling will be performed.}
+
 \item{path}{Path containing the genomes folder (for example "hg19").
 Default: "~/data/IRB/"}
 }

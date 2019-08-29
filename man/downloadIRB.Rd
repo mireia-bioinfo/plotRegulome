@@ -9,6 +9,8 @@ downloadIRB(output_dir,
 }
 \arguments{
 \item{output_dir}{Output directory for the datasets.}
+
+\item{file_dir}{Path to the compressed IRB database file.}
 }
 \description{
 Downloads the required IRB datasets.

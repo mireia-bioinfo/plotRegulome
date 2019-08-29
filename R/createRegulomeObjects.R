@@ -2,6 +2,10 @@
 #'
 #' This function loads the GWAS information for SNPs from the specified dataset, selects those
 #' present in \code{coordinates} and adds all the elements needed for plotting.
+#' @param top Number indicating how many of the most significant SNPs in the region will be shown
+#' as labels.
+#' @param snps_scaling Number indicating the value to which scale the maximum -log10 PVAL for SNPs.
+#' Defaults to NULL, meaning that no scaling will be performed.
 #' @inheritParams plotRegulome
 #' @return An object of class \code{snpsRegulome}, which is basically a list with the following
 #'         attributes:
