@@ -3,3 +3,5 @@
 ^Meta$
 ^doc$
 ^\.travis\.yml$
+data-raw
+test-errors

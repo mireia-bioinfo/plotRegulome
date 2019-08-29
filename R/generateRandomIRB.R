@@ -1,4 +1,5 @@
-
+#' Generate random IRB parameters
+#' @importFrom stats runif
 generateRandomIRB <- function() {
   randomIRB <- list()
 

@@ -3,6 +3,7 @@
 #' Downloads the required IRB datasets.
 #' @param output_dir Output directory for the datasets.
 #' @param file_dir Path to the compressed IRB database file.
+#' @importFrom utils download.file untar
 #' @export
 downloadIRB <- function(output_dir,
                         file_dir="http://gattaca.imppc.org/genome_browser/lplab/IRB_database.tar.gz") {
