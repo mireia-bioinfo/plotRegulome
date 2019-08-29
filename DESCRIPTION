@@ -1,6 +1,6 @@
 Package: plotRegulome
 Title: Plot Islet Regulome data
-Version: 1.0.0.9000
+Version: 0.1.0
 Authors@R: person("Mireia", "Ramos-Rodriguez", email = "mramos@igtp.cat", role = c("aut", "cre"))
 Description: The plotRegulome package allows the download and plotting of Islet Regulome data available at isletregulome.com.
 Depends: R (>= 3.4.2)
@@ -20,7 +20,6 @@ Imports:
     IRanges,
     S4Vectors
 Suggests: 
-    knitr,
     rmarkdown,
     kableExtra,
     R.rsp
