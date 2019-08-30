@@ -29,7 +29,7 @@
 #' Pancreatic Progenitors            \tab progenitors             \tab Cebola et al. (2015)         \cr
 #' Adult Islets - Chromatin States   \tab chromatinStates         \tab Parker et al. (2013)         \cr
 #' }
-#' @param cluster_dataset Name of the enhncer cluster data to plot. The value should be one
+#' @param clusters_dataset Name of the enhncer cluster data to plot. The value should be one
 #' of the defined below (column \emph{Dataset}). Defaults to \code{""}, which will produce an
 #' empty plot.
 #' \tabular{lll}{
@@ -69,7 +69,7 @@
 #'     snps_dataset <- "70KforT2D"
 #'     contacts_dataset <- 570519 #183446
 #'     maps_dataset <- "progenitors"
-#'     cluster_dataset <- ""
+#'     clusters_dataset <- ""
 #'     tfs_dataset <- ""
 #'     path <- "~/data/IRB/"
 #'
@@ -77,7 +77,7 @@
 #'                  snps_dataset=snps_dataset,
 #'                  contacts_dataset=contacts_dataset,
 #'                  maps_dataset=maps_dataset,
-#'                  cluster_dataset=cluster_dataset,
+#'                  clusters_dataset=clusters_dataset,
 #'                  tfs_dataset=tfs_dataset,
 #'                  path=path)
 #' }
@@ -92,7 +92,7 @@ plotRegulome <- function(coordinates,
                          # Maps -------
                          maps_dataset="",
                          # Clusters -------
-                         cluster_dataset="",
+                         clusters_dataset="",
                          cluster_col="dark green",
                          # TFs -------
                          tfs_dataset="",
@@ -112,7 +112,7 @@ plotRegulome <- function(coordinates,
     coordinates <- rnd$coordinates
     snps_dataset <- rnd$snps
     maps_dataset <- rnd$maps
-    cluster_dataset <- rnd$clusters
+    clusters_dataset <- rnd$clusters
     tfs_dataset <- rnd$tfs
   }
 
@@ -146,7 +146,7 @@ plotRegulome <- function(coordinates,
                                     path=path)
 
   clustersObject <- create_clustersRegulome(coordinates=coordinates,
-                                            cluster_dataset=cluster_dataset,
+                                            clusters_dataset=clusters_dataset,
                                             cluster_col=cluster_col,
                                             genome=genome,
                                             path=path)

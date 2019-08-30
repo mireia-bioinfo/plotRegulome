@@ -250,7 +250,7 @@ create_mapsRegulome <- function(coordinates,
 #' @export
 #' @import GenomicRanges
 create_clustersRegulome <- function(coordinates,
-                                    cluster_dataset,
+                                    clusters_dataset,
                                     cluster_col="dark green",
                                     genome="hg19",
                                     path="~/data/IRB/") {
@@ -266,9 +266,9 @@ create_clustersRegulome <- function(coordinates,
   }
 
   ## Load Cluster data
-  if(cluster_dataset!="") {
+  if(clusters_dataset!="") {
     file <- paste0(path, genome, "/clusters/",
-                   genome, "_cluster_", cluster_dataset, ".rda")
+                   genome, "_cluster_", clusters_dataset, ".rda")
 
     if (file.exists(file)) {
       load(file)

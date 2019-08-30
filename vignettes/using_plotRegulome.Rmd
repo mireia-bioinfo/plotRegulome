@@ -37,7 +37,7 @@ coordinates <- "chr5:50678921-51318155"
 snps_dataset <- "diagram"
 contacts_dataset <- "ISL1"
 maps_dataset <- "openChromatinClasses"
-cluster_dataset <- "enhancerClusters"
+clusters_dataset <- "enhancerClusters"
 tfs_dataset <- "adult"
 
 ## Call ploRegulome function
@@ -45,7 +45,7 @@ plotRegulome(coordinates=coordinates,
              snps_dataset=snps_dataset,
              contacts_dataset=contacts_dataset,
              maps_dataset=maps_dataset,
-             cluster_dataset=cluster_dataset,
+             clusters_dataset=clusters_dataset,
              tfs_dataset=tfs_dataset,
              path="~/data/IRB_database/")
 ```
@@ -135,14 +135,14 @@ coordinates <- "chr13:28354157-28550368"
 snps_dataset <- "70KforT2D"
 contacts_dataset <- "PDX1"
 maps_dataset <- "chromatinClassesReduced"
-cluster_dataset <- "enhancerHubs"
+clusters_dataset <- "enhancerHubs"
 tfs_dataset <- "structure"
 
 plotRegulome(coordinates=coordinates,
              snps_dataset=snps_dataset,
              contacts_dataset=contacts_dataset,
              maps_dataset=maps_dataset,
-             cluster_dataset=cluster_dataset,
+             clusters_dataset=clusters_dataset,
              tfs_dataset=tfs_dataset,
              path="~/data/IRB_database/")
 ```
@@ -172,7 +172,7 @@ plotRegulome(coordinates=coordinates,
              contacts_dataset=contacts_dataset,
              contacts_col=c("0"="dark grey", "3"="skyblue3", "5"="olivedrab4"),
              maps_dataset=maps_dataset,
-             cluster_dataset=cluster_dataset,
+             clusters_dataset=clusters_dataset,
              cluster_col="dodgerblue4",
              tfs_dataset=tfs_dataset,
              tfs_col="violetred4",
@@ -247,7 +247,7 @@ Other types of dataset are of no much use when plot alone, such as `tfsRegulome`
 
 ```{r}
 enh <- create_clustersRegulome(coordinates=coordinates,
-                               cluster_dataset="superEnhancers",
+                               clusters_dataset="superEnhancers",
                                path="~/data/IRB_database/")
 
 maps <- create_mapsRegulome(coordinates=coordinates,
