@@ -34,6 +34,17 @@ create_snpsRegulome <- function(coordinates,
                                 top=3,
                                 snps_scaling=NULL,
                                 path="~/data/IRB/") {
+  ## Convert coordinates to GRanges
+  if (class(coordinates)=="GRanges") {
+    coordinates <- coordinates
+  } else if (class(coordinates)=="data.frame") {
+    coordinates <- GRanges(seqnames=coordinates[1,1],
+                           ranges=IRanges(start=coordinates[1,2],
+                                          end=coordinates[1,3]))
+  } else if (class(coordinates)=="character") {
+    coordinates <- GRanges(coordinates)
+  }
+
   ## Load SNPs data
   if (snps_dataset!="") {
     file <- paste0(path,
@@ -98,6 +109,17 @@ create_contactsRegulome <- function(coordinates,
                                     contacts_col=c("0"="grey", "3"="blue", "5"="dark orange"),
                                     genome="hg19",
                                     path="~/data/IRB/") {
+  ## Convert coordinates to GRanges
+  if (class(coordinates)=="GRanges") {
+    coordinates <- coordinates
+  } else if (class(coordinates)=="data.frame") {
+    coordinates <- GRanges(seqnames=coordinates[1,1],
+                           ranges=IRanges(start=coordinates[1,2],
+                                          end=coordinates[1,3]))
+  } else if (class(coordinates)=="character") {
+    coordinates <- GRanges(coordinates)
+  }
+
   ## Load coverage data
   if (contacts_dataset != "") {
     load(paste0(path, genome, "/virtual4c/baitID_keyTable.rda"))
@@ -162,6 +184,17 @@ create_mapsRegulome <- function(coordinates,
                                 maps_dataset,
                                 genome="hg19",
                                 path="~/data/IRB/") {
+  ## Convert coordinates to GRanges
+  if (class(coordinates)=="GRanges") {
+    coordinates <- coordinates
+  } else if (class(coordinates)=="data.frame") {
+    coordinates <- GRanges(seqnames=coordinates[1,1],
+                           ranges=IRanges(start=coordinates[1,2],
+                                          end=coordinates[1,3]))
+  } else if (class(coordinates)=="character") {
+    coordinates <- GRanges(coordinates)
+  }
+
   ## Load Maps data
   if(maps_dataset!="") {
     file <- paste0(path, genome, "/maps/",
@@ -221,6 +254,17 @@ create_clustersRegulome <- function(coordinates,
                                     cluster_col="dark green",
                                     genome="hg19",
                                     path="~/data/IRB/") {
+  ## Convert coordinates to GRanges
+  if (class(coordinates)=="GRanges") {
+    coordinates <- coordinates
+  } else if (class(coordinates)=="data.frame") {
+    coordinates <- GRanges(seqnames=coordinates[1,1],
+                           ranges=IRanges(start=coordinates[1,2],
+                                          end=coordinates[1,3]))
+  } else if (class(coordinates)=="character") {
+    coordinates <- GRanges(coordinates)
+  }
+
   ## Load Cluster data
   if(cluster_dataset!="") {
     file <- paste0(path, genome, "/clusters/",
@@ -290,6 +334,17 @@ create_tfsRegulome <- function(coordinates,
                                position_y=0.5, # from 0 to 1
                                genome="hg19",
                                path="~/data/IRB/") {
+  ## Convert coordinates to GRanges
+  if (class(coordinates)=="GRanges") {
+    coordinates <- coordinates
+  } else if (class(coordinates)=="data.frame") {
+    coordinates <- GRanges(seqnames=coordinates[1,1],
+                           ranges=IRanges(start=coordinates[1,2],
+                                          end=coordinates[1,3]))
+  } else if (class(coordinates)=="character") {
+    coordinates <- GRanges(coordinates)
+  }
+
   ## Load TFs data
   if (tfs_dataset!="") {
     file <- paste0(path, genome, "/tfs/",
@@ -346,6 +401,17 @@ create_genesRegulome <- function(coordinates,
                                  showLongestTranscript=TRUE,
                                  genome="hg19",
                                  path="~/data/IRB/") {
+  ## Convert coordinates to GRanges
+  if (class(coordinates)=="GRanges") {
+    coordinates <- coordinates
+  } else if (class(coordinates)=="data.frame") {
+    coordinates <- GRanges(seqnames=coordinates[1,1],
+                           ranges=IRanges(start=coordinates[1,2],
+                                          end=coordinates[1,3]))
+  } else if (class(coordinates)=="character") {
+    coordinates <- GRanges(coordinates)
+  }
+
   ## Load gene and non-coding data
   load(paste0(path, genome, "/genes/",
               genome, "_gene_annotation_ensemblv75_",
