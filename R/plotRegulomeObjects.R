@@ -295,7 +295,8 @@ plotR.genesRegulome <- function(regulomeObject) {
                                     fill=group),
                                 color="black"),
                       ## Add gene name ------------
-                      ggplot2::geom_text(data=genes.df[genes.df$type=="GENE",],
+                      ggplot2::geom_text(data=genes.df[genes.df$type=="GENE" &
+                                                         genes.df$modEnd < end(genesObject$coordinates),],
                                 ggplot2::aes(x=modEnd, y=stepping,
                                     label=gene_name),
                                 hjust=0, fontface=3,

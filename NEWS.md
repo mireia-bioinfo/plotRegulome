@@ -1,3 +1,12 @@
+# plotRegulome 0.2.0
+
+* `create_xxxRegulome()` functions now accept characters and dataframes as `coordintes` argument, not only `GRanges` objects.
+* Added examples for `create_xxxRegulome()`.
+* Renamed `cluster_dataset` to `clusters_dataset` for consistency reasons.
+* Renamed generic S3 method from `plot()` to `plotR()`.
+* Added legend for gene annotation. It is only included when plotting using the S3 method `plotR`, but not when unsing `plotRegulome` function.
+
+
 # plotRegulome 0.1.0
 
 * Changed whole database structure and file loading.
