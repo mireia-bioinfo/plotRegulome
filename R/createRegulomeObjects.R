@@ -27,6 +27,11 @@
 #'             }
 #' @export
 #' @import GenomicRanges
+#' @examples \dontrun{
+#' snps <- create_snpsRegulome(coordinates="chr20:22461643-22666093",
+#'                             snps_dataset="diagram",
+#'                             path="~/data/IRB_database/")
+#' }
 create_snpsRegulome <- function(coordinates,
                                 snps_dataset="",
                                 snps_col="dark red",
@@ -104,6 +109,11 @@ create_snpsRegulome <- function(coordinates,
 #'             }
 #' @export
 #' @import GenomicRanges
+#' @examples \dontrun{
+#' cont <- create_contactsRegulome(coordinates="chr20:22461643-22666093",
+#'                                 contacts_dataset="FOXA2",
+#'                                 path="~/data/IRB_database/")
+#' }
 create_contactsRegulome <- function(coordinates,
                                     contacts_dataset,
                                     contacts_col=c("0"="grey", "3"="blue", "5"="dark orange"),
@@ -180,6 +190,11 @@ create_contactsRegulome <- function(coordinates,
 #'             }
 #' @export
 #' @import GenomicRanges
+#' @examples \dontrun{
+#' maps <- create_mapsRegulome(coordinates="chr20:22461643-22666093",
+#'                             maps_dataset="openChromatinClasses",
+#'                             path="~/data/IRB_database/")
+#' }
 create_mapsRegulome <- function(coordinates,
                                 maps_dataset,
                                 genome="hg19",
@@ -249,6 +264,11 @@ create_mapsRegulome <- function(coordinates,
 #'             }
 #' @export
 #' @import GenomicRanges
+#' @examples \dontrun{
+#' clust <- create_clustersRegulome(coordinates="chr20:22461643-22666093",
+#'                                  clusters_dataset="enhancerHubs",
+#'                                  path="~/data/IRB_database/")
+#' }
 create_clustersRegulome <- function(coordinates,
                                     clusters_dataset,
                                     cluster_col="dark green",
@@ -328,6 +348,11 @@ create_clustersRegulome <- function(coordinates,
 #'                  }
 #'             }
 #' @export
+#' @examples \dontrun{
+#'     tfs <- create_tfsRegulome(coordinates="chr20:22461643-22666093",
+#'                               tfs_dataset="adult",
+#'                               path="~/data/IRB_database/")
+#' }
 create_tfsRegulome <- function(coordinates,
                                tfs_dataset,
                                tfs_col="dark blue",
@@ -394,6 +419,10 @@ create_tfsRegulome <- function(coordinates,
 #'             }
 #' @export
 #' @import GenomicRanges
+#' @examples \dontrun{
+#'     genes <- create_genesRegulome(coordinates="chr20:22461643-22666093",
+#'                                   path="~/data/IRB_database/")
+#' }
 create_genesRegulome <- function(coordinates,
                                  genes_col=c("gene"="dark grey",
                                              "spec"="darkorchid3",

@@ -60,3 +60,10 @@ An object of class \code{snpsRegulome}, which is basically a list with the follo
 This function loads the GWAS information for SNPs from the specified dataset, selects those
 present in \code{coordinates} and adds all the elements needed for plotting.
 }
+\examples{
+\dontrun{
+snps <- create_snpsRegulome(coordinates="chr20:22461643-22666093",
+                            snps_dataset="diagram",
+                            path="~/data/IRB_database/")
+}
+}

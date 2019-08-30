@@ -46,3 +46,10 @@ An object of class \code{contactsRegulome}, which is basically a list with the f
 This function uses virtual 4C data (3 bigWig files, scores 0, 3 and 5) to generate an object containing
 the data present in \code{coordinates} and all the elements needed for its plotting method.
 }
+\examples{
+\dontrun{
+cont <- create_contactsRegulome(coordinates="chr20:22461643-22666093",
+                                contacts_dataset="FOXA2",
+                                path="~/data/IRB_database/")
+}
+}

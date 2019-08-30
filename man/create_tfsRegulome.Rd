@@ -54,3 +54,10 @@ An object of class \code{tfsRegulome}, which is basically a list with the follow
 This function load the TFBS data, selects those binding sites present in \code{coordinates} and
 adds the needed parameters for plotting.
 }
+\examples{
+\dontrun{
+    tfs <- create_tfsRegulome(coordinates="chr20:22461643-22666093",
+                              tfs_dataset="adult",
+                              path="~/data/IRB_database/")
+}
+}

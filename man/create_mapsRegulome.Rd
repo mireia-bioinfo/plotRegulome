@@ -44,3 +44,10 @@ An object of class \code{mapsRegulome}, which is basically a list with the follo
 This function loads chromatin maps, obtains the classes present in \code{coordinates} and adds
 the needed parameters for plotting.
 }
+\examples{
+\dontrun{
+maps <- create_mapsRegulome(coordinates="chr20:22461643-22666093",
+                            maps_dataset="openChromatinClasses",
+                            path="~/data/IRB_database/")
+}
+}

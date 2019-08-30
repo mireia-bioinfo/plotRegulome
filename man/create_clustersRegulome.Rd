@@ -53,3 +53,10 @@ An object of class \code{clustersRegulome}, which is basically a list with the f
 This function loads the selected cluster classification, selects the clusters present in \code{coordinates}
 and adds the needed parameters for plotting.
 }
+\examples{
+\dontrun{
+clust <- create_clustersRegulome(coordinates="chr20:22461643-22666093",
+                                 clusters_dataset="enhancerHubs",
+                                 path="~/data/IRB_database/")
+}
+}

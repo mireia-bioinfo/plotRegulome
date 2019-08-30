@@ -43,3 +43,9 @@ An object of class \code{mapsRegulome}, which is basically a list with the follo
 This funciton loads all genes in chr, selects those transcripts present in \code{coordinates}
 and adds the needed parameters for plotting.
 }
+\examples{
+\dontrun{
+    genes <- create_genesRegulome(coordinates="chr20:22461643-22666093",
+                                  path="~/data/IRB_database/")
+}
+}
