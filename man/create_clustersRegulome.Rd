@@ -4,7 +4,7 @@
 \alias{create_clustersRegulome}
 \title{Create clustersRegulome Object}
 \usage{
-create_clustersRegulome(coordinates, cluster_dataset,
+create_clustersRegulome(coordinates, clusters_dataset,
   cluster_col = "dark green", genome = "hg19", path = "~/data/IRB/")
 }
 \arguments{
@@ -12,7 +12,7 @@ create_clustersRegulome(coordinates, cluster_dataset,
 (i.e. \code{chr11:17227951-17589050}) indicating the coordinates for the region the user wants
 to plot.}
 
-\item{cluster_dataset}{Name of the enhncer cluster data to plot. The value should be one
+\item{clusters_dataset}{Name of the enhncer cluster data to plot. The value should be one
 of the defined below (column \emph{Dataset}). Defaults to \code{""}, which will produce an
 empty plot.
 \tabular{lll}{

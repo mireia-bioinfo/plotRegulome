@@ -8,7 +8,7 @@
 \usage{
 plotRegulome(coordinates, snps_dataset = "", snps_col = "dark red",
   contacts_dataset = "", contacts_col = c(`0` = "grey", `3` = "blue",
-  `5` = "dark orange"), maps_dataset = "", cluster_dataset = "",
+  `5` = "dark orange"), maps_dataset = "", clusters_dataset = "",
   cluster_col = "dark green", tfs_dataset = "",
   tfs_col = "dark blue", genes_col = c(gene = "dark grey", spec =
   "darkorchid3", lnc = "black"), showLongestTranscript = TRUE,
@@ -48,7 +48,7 @@ Pancreatic Progenitors            \tab progenitors             \tab Cebola et al
 Adult Islets - Chromatin States   \tab chromatinStates         \tab Parker et al. (2013)         \cr
 }}
 
-\item{cluster_dataset}{Name of the enhncer cluster data to plot. The value should be one
+\item{clusters_dataset}{Name of the enhncer cluster data to plot. The value should be one
 of the defined below (column \emph{Dataset}). Defaults to \code{""}, which will produce an
 empty plot.
 \tabular{lll}{

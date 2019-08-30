@@ -259,13 +259,13 @@ plot.genesRegulome <- function(genesObject) {
                               genesObject$coordinates)
 
     genes.df <- data.frame(genes.step)
-    color <- data.frame(group=names(genesObject$col),
-                        color=genesObject$col,
-                        stringsAsFactors=FALSE)
-    genes.df <- dplyr::left_join(genes.df, color, by="group")
 
     distance <- width(genesObject$coordinates)*0.01
     genes.df$modEnd <- genes.df$end + distance
+
+    labs <- c("gene"="Gene",
+              "spec"="Islet-specific gene",
+              "lnc"="Islet lncRNA")
 
     genesPlot <- list(ggplot2::geom_segment(data=genes.df,
                                    ggplot2::aes(x=start, y=stepping,
@@ -273,8 +273,8 @@ plot.genesRegulome <- function(genesObject) {
                       ## Draw gene exons ----------
                       ggplot2::geom_rect(data=genes.df[genes.df$type=="EXON",],
                                 ggplot2::aes(xmin=start, xmax=end,
-                                    ymin=(stepping-0.3), ymax=(stepping+0.3)),
-                                fill=genes.df$color[genes.df$type=="EXON"],
+                                    ymin=(stepping-0.3), ymax=(stepping+0.3),
+                                    fill=group),
                                 color="black"),
                       ## Add gene name ------------
                       ggplot2::geom_text(data=genes.df[genes.df$type=="GENE",],
@@ -282,6 +282,10 @@ plot.genesRegulome <- function(genesObject) {
                                     label=gene_name),
                                 hjust=0, fontface=3,
                                 size=3),
+                      ## Fill legend --------------
+                      ggplot2::scale_fill_manual(values=genesObject$col,
+                                                 labels=labs,
+                                                 name="Annotation type"),
                       ## X axis ------------------
                       scaleXCoordinates(chr=as.character(seqnames(genesObject$coordinates)),
                                         limits=c(start(genesObject$coordinates),

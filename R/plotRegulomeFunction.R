@@ -212,7 +212,7 @@ plotRegulome <- function(coordinates,
   ## Compose main plot --------------
   main <- cowplot::plot_grid(p1 + themeXblank(legend.position="none"),
                              p2 + themeXYblank(title=T, legend.position="none"),
-                             p3,
+                             p3 + theme(legend.position="none"),
                              nrow=3, align="v", rel_heights = c(0.4,0.3,0.3))
 
   if (snpsObject$name=="" & contactsObject$name=="") {
