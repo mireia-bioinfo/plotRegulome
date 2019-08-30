@@ -3,14 +3,18 @@
 #' This is a generic method that depending on the class of the passed object will plot according
 #' to the regulome Plot.
 #' @param regulomeObject An object created by \code{create_xxRegulome}, depending on the data you want to show.
+#' @rdname plotR
 #' @export
 #' @import GenomicRanges
-
-plot <- function(regulomeObject) {
-  UseMethod("plot")
+plotR <- function(regulomeObject) {
+  UseMethod("plotR")
 }
 
-plot.snpsRegulome <- function(snpsObject) {
+
+#' @export
+plotR.snpsRegulome <- function(regulomeObject) {
+  snpsObject <- regulomeObject
+
   if (length(snpsObject$value)!=0) {
 
     ## Add ids for top snps -----
@@ -68,7 +72,10 @@ plot.snpsRegulome <- function(snpsObject) {
   # ggplot() + snpsPlot
 }
 
-plot.contactsRegulome <- function(contactsObject) {
+#' @export
+plotR.contactsRegulome <- function(regulomeObject) {
+  contactsObject <- regulomeObject
+
   ## Check if GRanges contains elements
   if (length(contactsObject$value)!=0) {
     ## Convert to data.frame
@@ -107,7 +114,10 @@ plot.contactsRegulome <- function(contactsObject) {
   return(contactPlot)
 }
 
-plot.mapsRegulome <- function(mapsObject) {
+#' @export
+plotR.mapsRegulome <- function(regulomeObject) {
+  mapsObject <- regulomeObject
+
   if (length(mapsObject$value)>0) {
     ## Convert RE type to character
     mapsObject$value$type <- as.character(mapsObject$value$type)
@@ -149,7 +159,10 @@ plot.mapsRegulome <- function(mapsObject) {
 
 }
 
-plot.clustersRegulome <- function(clustersObject) {
+#' @export
+plotR.clustersRegulome <- function(regulomeObject) {
+  clustersObject <- regulomeObject
+
   if (length(clustersObject$value)>0) {
     ## Convert to data.frame
     clusters.df <- data.frame(clustersObject$value)
@@ -179,7 +192,9 @@ plot.clustersRegulome <- function(clustersObject) {
   # ggplot() + clustersPlot
 }
 
-plot.tfsRegulome <- function(tfsObject) {
+#' @export
+plotR.tfsRegulome <- function(regulomeObject) {
+  tfsObject <- regulomeObject
 
   if(length(tfsObject$value)!=0) {
     ## Add number of TFs binding in same sites
@@ -252,7 +267,10 @@ plot.tfsRegulome <- function(tfsObject) {
   # ggplot() + tfsPlot
 }
 
-plot.genesRegulome <- function(genesObject) {
+#' @export
+plotR.genesRegulome <- function(regulomeObject) {
+  genesObject <- regulomeObject
+
   if (length(genesObject$value)!=0) {
     ## Add stepping to avoid overlapping genes
     genes.step <- addStepping(genesObject$value,

@@ -10,7 +10,7 @@ generateLegendGG <- function(contactsObject,
   leg.plot <- list()
   for (i in 1:length(leg.list)) {
     if (leg.list[[i]]$name!="") {
-      leg <- ggplot2::ggplot() + plot(leg.list[[i]])
+      leg <- ggplot2::ggplot() + plotR(leg.list[[i]])
       leg.plot[[names(leg.list[i])]] <- leg
     }
   }

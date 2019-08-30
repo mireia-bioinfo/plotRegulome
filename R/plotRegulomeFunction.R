@@ -64,7 +64,7 @@
 #' inches is: \code{width=11, height=6}
 #' @export
 #' @import GenomicRanges
-#' @example \dontrun{
+#' @examples \dontrun{
 #'     coordinates <- "chr5:131817301-131826490"
 #'     snps_dataset <- "70KforT2D"
 #'     contacts_dataset <- 570519 #183446
@@ -166,8 +166,8 @@ plotRegulome <- function(coordinates,
 
   #### Full plot ---------------------------
   ## SNPs & contacts -----------------------
-  plotSNPS <- plot(snpsObject)
-  plotContacts <- plot(contactsObject)
+  plotSNPS <- plotR(snpsObject)
+  plotContacts <- plotR(contactsObject)
 
   p1 <-
       ggplot2::ggplot() +
@@ -189,9 +189,9 @@ plotRegulome <- function(coordinates,
   }
 
   ## Maps & TFs -----------------------
-  plotMaps <- plot(mapsObject)
-  plotClusters <- plot(clustersObject)
-  plotTFS <- plot(tfsObject)
+  plotMaps <- plotR(mapsObject)
+  plotClusters <- plotR(clustersObject)
+  plotTFS <- plotR(tfsObject)
 
   p2 <-
     ggplot2::ggplot() +
@@ -207,12 +207,12 @@ plotRegulome <- function(coordinates,
   ## Genes -----------------------
   p3 <-
     ggplot2::ggplot() +
-    plot(genesObject)
+    plotR(genesObject)
 
   ## Compose main plot --------------
   main <- cowplot::plot_grid(p1 + themeXblank(legend.position="none"),
                              p2 + themeXYblank(title=T, legend.position="none"),
-                             p3 + theme(legend.position="none"),
+                             p3 + ggplot2::theme(legend.position="none"),
                              nrow=3, align="v", rel_heights = c(0.4,0.3,0.3))
 
   if (snpsObject$name=="" & contactsObject$name=="") {

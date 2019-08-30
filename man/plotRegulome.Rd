@@ -102,3 +102,22 @@ By providing the coordinates and IRB datasets of interest, it will produce the c
 See the README on
 \href{https://github.com/mireia-bioinfo/plotRegulome#readme}{GitHub}
 }
+\examples{
+\dontrun{
+    coordinates <- "chr5:131817301-131826490"
+    snps_dataset <- "70KforT2D"
+    contacts_dataset <- 570519 #183446
+    maps_dataset <- "progenitors"
+    clusters_dataset <- ""
+    tfs_dataset <- ""
+    path <- "~/data/IRB/"
+
+    plotRegulome(coordinates=coordinates,
+                 snps_dataset=snps_dataset,
+                 contacts_dataset=contacts_dataset,
+                 maps_dataset=maps_dataset,
+                 clusters_dataset=clusters_dataset,
+                 tfs_dataset=tfs_dataset,
+                 path=path)
+}
+}
