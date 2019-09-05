@@ -1,0 +1,7 @@
+destination: docs
+url: https://mireia-bioinfo.github.io/plotRegulome/
+development:
+    mode: unreleased
+template:
+    params:
+        bootswatch: yeti

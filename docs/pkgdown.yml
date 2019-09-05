@@ -1,0 +1,9 @@
+pandoc: 1.16.0.2
+pkgdown: 1.4.0
+pkgdown_sha: ~
+articles:
+  using_plotRegulome: using_plotRegulome.html
+urls:
+  reference: https://mireia-bioinfo.github.io/plotRegulome//reference
+  article: https://mireia-bioinfo.github.io/plotRegulome//articles
+
