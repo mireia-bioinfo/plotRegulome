@@ -2,11 +2,13 @@ generateLegendGG <- function(contactsObject,
                              mapsObject,
                              clustersObject,
                              tfsObject,
-                             snpsObject) {
+                             snpsObject,
+                             genesObject) {
 
   ## Automatic legends ------------------
   leg.list <- list(snps=snpsObject,
-                   maps=mapsObject)
+                   maps=mapsObject,
+                   genes=genesObject)
   leg.plot <- list()
   for (i in 1:length(leg.list)) {
     if (leg.list[[i]]$name!="") {
@@ -83,12 +85,25 @@ generateLegendGG <- function(contactsObject,
   legends <- legends[idx]
 
   ## Add to other legends
-  if (length(legends)==2) {
-    leg.plot <- c(legends[1],
-                  leg.plot,
-                  legends[2])
+  if (length(legends)==2) { ###legend genes
+    if (any("genes" %in% names(leg.plot))) {
+      leg.plot <- c(legends[1],
+                    leg.plot[-length(leg.plot)],
+                    legends[2],
+                    leg.plot[length(leg.plot)])
+    } else {
+      leg.plot <- c(legends[1],
+                    leg.plot,
+                    legends[2])
+    }
+
   } else {
-    leg.plot <- c(leg.plot, legends)
+    if (any("genes" %in% names(leg.plot))) {
+      leg.plot <- c(leg.plot[-length(leg.plot)], legends, leg.plot[length(leg.plot)])
+    } else {
+      leg.plot <- c(leg.plot, legends)
+    }
+
   }
 
   if (length(leg.plot)>0) {

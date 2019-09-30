@@ -1,3 +1,7 @@
+# plotRegulome 0.2.1
+
+* Added legend for RNA-seq data (islet-specific genes).
+
 # plotRegulome 0.2.0
 
 * `create_xxxRegulome()` functions now accept characters and dataframes as `coordintes` argument, not only `GRanges` objects.

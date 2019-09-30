@@ -223,7 +223,8 @@ plotRegulome <- function(coordinates,
                              mapsObject,
                              clustersObject,
                              tfsObject,
-                             snpsObject)
+                             snpsObject,
+                             genesObject)
 
   RegulomePlot <- cowplot::plot_grid(
                                 plotIdeogramRegulome(coordinates,
