@@ -1,3 +1,7 @@
+# plotRegulome 0.2.2
+
+* Fixed bug in which gene exons were not filled.
+
 # plotRegulome 0.2.1
 
 * Added legend for RNA-seq data (islet-specific genes).

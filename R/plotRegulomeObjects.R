@@ -304,7 +304,7 @@ plotR.genesRegulome <- function(regulomeObject) {
                       ## Fill legend --------------
                       ggplot2::scale_fill_manual(values=genesObject$col,
                                                  labels=labs,
-                                                 limits=c("spec"),
+                                                 # limits=c("spec"),
                                                  name="RNA-seq"),
                       ## X axis ------------------
                       scaleXCoordinates(chr=as.character(seqnames(genesObject$coordinates)),
